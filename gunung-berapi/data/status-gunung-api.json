@@ -1,0 +1,569 @@
+{
+  "meta": {
+    "source": "MAGMA Indonesia - PVMBG",
+    "source_url": "https://magma.esdm.go.id/v1/gunung-api/tingkat-aktivitas",
+    "retrieved_at_utc": "2026-10-29T02:41:32+00:00",
+    "count": 69,
+    "counts_by_level": {
+      "Awas": 0,
+      "Siaga": 3,
+      "Waspada": 24,
+      "Normal": 42
+    },
+    "note": "Snapshot daftar tingkat aktivitas MAGMA. Waktu pengambilan bukan waktu pembaruan status setiap gunung. Periksa laporan resmi untuk detail."
+  },
+  "volcanoes": [
+    {
+      "name": "Agung",
+      "location": "Bali",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329463?signature=58dc37fcbcece1a2207d898700a831eccd33736d3c8d034634cfc4d642817eb0"
+    },
+    {
+      "name": "Ambang",
+      "location": "Sulawesi Utara",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329395?signature=06903b2c99a90b3fc11153e2d7e697e864bb89ac8c349b83c07e0a5b114b593c"
+    },
+    {
+      "name": "Anak Krakatau",
+      "location": "Lampung",
+      "status_level": 3,
+      "status_label": "Siaga",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329449?signature=2ba0b70a3fa3fb0048920b8834d13858112d923b26e47d816f28d9cda8c11328"
+    },
+    {
+      "name": "Anak Ranakah",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329416?signature=6620f069f9afbb3539f5f31f6a47fed92d4d65bcba352f1214eed89af3d6fe76"
+    },
+    {
+      "name": "Arjuno Welirang",
+      "location": "Jawa Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329477?signature=d179127605ca4b59bf8c56c3813a4a7bf5621cf711ac00c20fb38eedaadf1315"
+    },
+    {
+      "name": "Awu",
+      "location": "Sulawesi Utara",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329457?signature=d9d3fe1ebe8c25c269cd0fd03f2b82dfe0cfa39f0ac31b7da1c2e8b6a6357f20"
+    },
+    {
+      "name": "Banda Api",
+      "location": "Maluku",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329476?signature=e3cfcca727071eac6086359a3407f536ffb24adc84f74c3317a450f8e8ad1e89"
+    },
+    {
+      "name": "Batur",
+      "location": "Bali",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329471?signature=933b8b22b277fae6502472dbac762b4b767bc21b2095609aec0848d0d71a367d"
+    },
+    {
+      "name": "Batutara",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/304360?signature=9fc9cb41fee7945dcaf55e401991812d3efa16f558033d67049b5ff9ec490e18"
+    },
+    {
+      "name": "Bromo",
+      "location": "Jawa Timur",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329427?signature=28457cc22ac7bec9ec9bad6d4b405762701f32a0a9b6da45fb137f4c45f304b5"
+    },
+    {
+      "name": "Bur Ni Telong",
+      "location": "Aceh",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329460?signature=012926895b40839d65052d451d29c2c7487f80a527d3ebfad3a417433ad9ca6a"
+    },
+    {
+      "name": "Ciremai",
+      "location": "Jawa Barat",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329442?signature=6fd7d5c7ffd21ed30739fe65109fbda39bd5a0b37af63838700f554670fb9f72"
+    },
+    {
+      "name": "Colo",
+      "location": "Sulawesi Tengah",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329468?signature=d4d6f69ce5d31248ebad45b471db4a6c870db032dea0afb921da598839af2259"
+    },
+    {
+      "name": "Dempo",
+      "location": "Sumatera Selatan",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329470?signature=e52b59f5850fa7d84ae5fcbeb53f4ff10187fe99c1d4a259eaea6625b259cb2f"
+    },
+    {
+      "name": "Dieng",
+      "location": "Jawa Tengah",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329452?signature=d3f371ac192ec16f91f8143868856b43af0849c28de2e42ed6c3cefeeb94505a"
+    },
+    {
+      "name": "Dukono",
+      "location": "Maluku Utara",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329413?signature=9163f3ce4ed8255bf67859e397a57d456cf02566884f8503fcf57973d3e6c41e"
+    },
+    {
+      "name": "Ebulobo",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329434?signature=2e59a0afc736fa4c9659515bc04496b8bb1514f7c53efea6183c922e2b6dd249"
+    },
+    {
+      "name": "Egon",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329409?signature=363e54629eecd219a0d028a0d8f9736b498e1c7f8afa659c58229e8897fd21bc"
+    },
+    {
+      "name": "Galunggung",
+      "location": "Jawa Barat",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329469?signature=476cf95d6b223eebcfaa1975532421cb64755fd89d366c64c3c4e8d17d39c952"
+    },
+    {
+      "name": "Gamalama",
+      "location": "Maluku Utara",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329429?signature=2c472d7b4c3d0bbe3eec8652f1282e5580c93efe9555726fafe25f1413a86533"
+    },
+    {
+      "name": "Gamkonora",
+      "location": "Maluku Utara",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329439?signature=dd2d8a3108902cbf157cd908846fec1bea334444a08322b068ba713fea0dfd04"
+    },
+    {
+      "name": "Gede",
+      "location": "Jawa Barat",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329436?signature=36a91166f3094fa8555f2e4ee81cf70c707b03c93208eb08d1ce345a924f660e"
+    },
+    {
+      "name": "Guntur",
+      "location": "Jawa Barat",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329464?signature=421333ecd9a2c47f490794c9e88224e528452dd56ce8ae02574b16e67a7f50ea"
+    },
+    {
+      "name": "Hobal",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/293107?signature=f959cd69680f596cadcabcf3f7941886b8e715da2686516bdb856fd27f93c5f6"
+    },
+    {
+      "name": "Ibu",
+      "location": "Maluku Utara",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329414?signature=9b67edc16914f8377167a454abc18b6d8ae520595847d26c1a2f7ee10e29f498"
+    },
+    {
+      "name": "Ijen",
+      "location": "Jawa Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329396?signature=6644174921b4c355de0ef699a7ba9b99e87fcc06bacb8008d0dc3dadf5d33f0f"
+    },
+    {
+      "name": "Ile Werung",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329443?signature=62c5e60b998496f9a737d285f63af4e77651eb5235e6cfa9250f610b2b7b32e5"
+    },
+    {
+      "name": "Ili Boleng",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329430?signature=8347e60885a3e76b7b5bec5e68a07fff7b42f493d1f0d01a02b93c8956fd106e"
+    },
+    {
+      "name": "Ili Lewotolok",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329412?signature=6bca242ef390e99b06e79e9d37e4d73a6f7ac2c77e5dde15ec2840224331da70"
+    },
+    {
+      "name": "Inielika",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329453?signature=72aa0459c04447e1c000b57d4c6f3a57bde4b7b54fcc396d73cb9efba3b4c502"
+    },
+    {
+      "name": "Inierie",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329408?signature=048d4528af44514b7ecef9175b8e1e5da889d446966590e2bce4cb6b94beb42c"
+    },
+    {
+      "name": "Iya",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329433?signature=4fa07a723f7201d2a3f086604319fcc7ba7791914c6b207ea8feb9b8201d8391"
+    },
+    {
+      "name": "Kaba",
+      "location": "Bengkulu",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329454?signature=b231e4feed5df3af833658c6626941fad805264b92994b9eb66165f35069e5e9"
+    },
+    {
+      "name": "Karangetang",
+      "location": "Sulawesi Utara",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329415?signature=9584e37fd1d691b2fecc631c8a8806e355f586e3490b089bee7ed63564c503b7"
+    },
+    {
+      "name": "Kelimutu",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329437?signature=88f4d3623c846407293e6400a6a677e9dbaf387cd9abb00e00144e0f1517ebba"
+    },
+    {
+      "name": "Kelud",
+      "location": "Jawa Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329456?signature=d554c988943a058d0401576bb60e1599a903fe5cd523105027c57c4e3adfbed1"
+    },
+    {
+      "name": "Kerinci",
+      "location": "Jambi, Sumatera Barat",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329419?signature=e988c967f2acd9673abdf72c92fc7786a6a83effec28e5cb003a3bfbb11cf2ef"
+    },
+    {
+      "name": "Kie Besi",
+      "location": "Maluku Utara",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329420?signature=14865cb064a34fcba20a3c1c38f0f712b7982971f96b301e8cb16aeeee27ecb2"
+    },
+    {
+      "name": "Lamongan",
+      "location": "Jawa Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329474?signature=fc9249bbf239d4fc1533514178f47e2699c119cb14234b1e7d07fbdb804ddd67"
+    },
+    {
+      "name": "Lereboleng",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329441?signature=4ac80a6658606ee99bb2403ff1a79c5906e7621eccd706fc6d3c269b7f0f5b88"
+    },
+    {
+      "name": "Lewotobi Laki-laki",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329431?signature=c0491e7dcd74f5ed9cde2c669d1e42ded353fd016fe88ff7a890277671847732"
+    },
+    {
+      "name": "Lewotobi Perempuan",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329411?signature=1784ee41c3ec509e3a882564905e99c421252839e20b96b1d59df0d237e1e575"
+    },
+    {
+      "name": "Lokon",
+      "location": "Sulawesi Utara",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329440?signature=df873148aa2e911c77362d583c533ff72b2c62390017fc993b92b056c394f0a7"
+    },
+    {
+      "name": "Mahawu",
+      "location": "Sulawesi Utara",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329455?signature=401abdfd3ecb647e150d188c7e210d4e3c0d9eeb41596b45f371ae3e7d399d94"
+    },
+    {
+      "name": "Marapi",
+      "location": "Sumatera Barat",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329423?signature=5bec34df52c8e9b238b3e6e1c5eb9848b5d921cdd328ca7d18c59c2652da1d14"
+    },
+    {
+      "name": "Merapi",
+      "location": "Daerah Istimewa Yogyakarta dan Jawa Tengah",
+      "status_level": 3,
+      "status_label": "Siaga",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329446?signature=0a61b39ad8907cbb6fc31b6145e64879278606c5197d8b990848b202b3450ad0"
+    },
+    {
+      "name": "Papandayan",
+      "location": "Jawa Barat",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329426?signature=50c4a9a9366f8999228a41eaa370619ee898fdc62e5a4fe5a7d2da96bbe2b85a"
+    },
+    {
+      "name": "Peut Sague",
+      "location": "Daerah Istimewa Aceh",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329473?signature=850bd192da210c99c0da09e7172768d1af0fdcc5b6c44b63b17ef6be719cd358"
+    },
+    {
+      "name": "Raung",
+      "location": "Jawa Timur",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329461?signature=6206cd57cb33584e67bd2dcff8797b568780a4faf3e6291967223cc7e267ec7a"
+    },
+    {
+      "name": "Rinjani",
+      "location": "Nusa Tenggara Barat",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329459?signature=9ab2b8c0d2bf57815f54542b00dac3a99ddd62d02effc36ccb1c6240f3965063"
+    },
+    {
+      "name": "Rokatenda",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329425?signature=baeb86676a55911ba24436e4e39794819c986fb0ceda84b4ee499941d0936adb"
+    },
+    {
+      "name": "Ruang",
+      "location": "Sulawesi Utara",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329444?signature=7dae760173398f96e5da6fd34b8659bd3ef032cbf6fd2245eb3df6078e247708"
+    },
+    {
+      "name": "Salak",
+      "location": "Jawa Barat",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329458?signature=499137b1132bb538b7a92a0f83739cfb13902503e38122d82c9cb15e888bf079"
+    },
+    {
+      "name": "Sangeangapi",
+      "location": "Nusa Tenggara Barat",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329438?signature=416f7fe7138141d22eec0ea9b78ca82bce63425edbf4717c2da22a19686c6dd9"
+    },
+    {
+      "name": "Semeru",
+      "location": "Jawa Timur",
+      "status_level": 3,
+      "status_label": "Siaga",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329450?signature=ae0973ed75a0785faddb3bcf4ee880ae35ccc60b55c5e114655e8e1a5ef83ff8"
+    },
+    {
+      "name": "Seulawah Agam",
+      "location": "Daerah Istimewa Aceh",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329475?signature=f0baa31e48633f5f8c6bb3ccebeb6acd5de8f09bddb7bfda8e94345c80a5e0d6"
+    },
+    {
+      "name": "Sinabung",
+      "location": "Sumatera Utara",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329447?signature=a2452c1c1ea05fd8268243871242f2021f1b2819f256637f43deb40177bea6f9"
+    },
+    {
+      "name": "Sirung",
+      "location": "Nusa Tenggara Timur",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329432?signature=ed815f1927517b73d4d76d8b9a653892998aa20d8b6f78a2ab4c05ec0572ee6a"
+    },
+    {
+      "name": "Slamet",
+      "location": "Jawa Tengah",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329428?signature=5dda1302b8118da0e5589f2c180d32b241c5025b2bb9f5bb6a36d972c057414b"
+    },
+    {
+      "name": "Soputan",
+      "location": "Sulawesi Utara",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329462?signature=0ae802a113b852270ab73658d1a6833b8ae8991a77eb9e274aa953915a5fa834"
+    },
+    {
+      "name": "Sorikmarapi",
+      "location": "Sumatera Utara",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329467?signature=f63d5645ca357ce48539856eacf8c401ecce65bedf4f1e14305f8980d89cf1ef"
+    },
+    {
+      "name": "Sumbing",
+      "location": "Jawa Tengah",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329466?signature=ab961f7ba7ad8ecf16b3d1c5bc6689f21647a31ed9108139d3258c5e0ededb39"
+    },
+    {
+      "name": "Sundoro",
+      "location": "Jawa Tengah",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329465?signature=af22e61c8b95fc44a4730c015ff9b7f666a9803050e34004c6ab69c75fe6e7c8"
+    },
+    {
+      "name": "Talang",
+      "location": "Sumatera Barat",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329472?signature=1e000f8957cdc52262df35a7f418889091b85317f9f58ff6028266c4cad2efe2"
+    },
+    {
+      "name": "Tambora",
+      "location": "Nusa Tenggara Barat",
+      "status_level": 2,
+      "status_label": "Waspada",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329410?signature=ced0a7f6814fb7240bdb2a168b56059d589f62d1fec9a957745ab1ee4fa638f8"
+    },
+    {
+      "name": "Tandikat",
+      "location": "Sumatera Barat",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329448?signature=899ef852545558cfe1316ee379188a37426c22155a7754b82adeba876a0f6c7d"
+    },
+    {
+      "name": "Tangkoko",
+      "location": "Sulawesi Utara",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329445?signature=ee79785d0f7125fdf8ba42da1a9f9c0f7df9ebd36a9ae5ae923f4758dced2238"
+    },
+    {
+      "name": "Tangkuban Parahu",
+      "location": "Jawa Barat",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329435?signature=35bc461b32a0279b8f5f84e9eda810a6a3821921a349ccae9585ef4b024f17ab"
+    },
+    {
+      "name": "Wurlali",
+      "location": "Maluku",
+      "status_level": 1,
+      "status_label": "Normal",
+      "status_updated_at": null,
+      "report_url": "https://magma.esdm.go.id/v1/gunung-api/laporan/329451?signature=734017c63c54714e0d23aaeec47728169a2202aa01e80d8c95673980a71a8880"
+    }
+  ]
+}

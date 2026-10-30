@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <script>try{const t=localStorage.getItem("site-theme")||sessionStorage.getItem("site-theme-session");document.documentElement.dataset.theme=t==="light"||t==="dark"?t:"dark"}catch(_){document.documentElement.dataset.theme="dark"}</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sebaran &amp; Tingkat Aktivitas Gunung Api | Tim sEm4nGa7 k0Mp4k AnT1 mLeS</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312291f'/%3E%3Cpath d='M8 22 16 8l8 14' fill='none' stroke='%23ff8a3d' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="../main/style/theme.css?v=9">
+  <link rel="stylesheet" href="./style/style.css?v=9">
+</head>
+<body>
+  <nav class="site-nav" aria-label="Navigasi utama">
+    <div class="site-nav-inner">
+      <span class="site-nav-brand">Tim sEm4nGa7 k0Mp4k AnT1 mLeS</span>
+      <div class="site-nav-links">
+        <a class="site-nav-link" href="../main/">Beranda</a>
+        <a class="site-nav-link is-active" href="./" aria-current="page">Gunung Berapi</a>
+        <a class="site-nav-link" href="../karhutla/">Karhutla</a>
+      </div>
+    </div>
+  </nav>
+  <main>
+    <section id="map-section" class="map-section">
+      <div id="map-container" class="map-container"></div>
+    </section>
+
+    <div class="page-container">
+      <section id="highlight-section" class="highlight-section">
+        <h2>Berdampingan dengan Bumi yang Dinamis</h2>
+        <div class="highlight-body">
+          <p>Jajaran gunung berapi membentuk wajah kepulauan Indonesia sekaligus memberi pengaruh besar bagi jutaan warga di sekitarnya. Pergerakan lempeng dan dapur magma jauh di bawah kerak bumi dapat tampak ke permukaan dalam wujud letusan, getaran gempa, hingga hadirnya tanah garapan, mata air pegunungan, dan cadangan mineral.</p>
+          <p>Peta interaktif di atas merangkum posisi gunung berapi beserta tingkat aktivitas berdasarkan rekaman data MAGMA Indonesia. Rangkaian bahasan di bawah ini disusun mulai dari cara membaca titik peta dan tingkatan statusnya, proses geologi di balik gunung api, potensi bahayanya, hingga bagaimana masyarakat memanfaatkan berkah alamnya secara aman.</p>
+        </div>
+      </section>
+
+      <section id="information-section">
+        <header class="section-header">
+          <h2>Memahami Status, Geologi, dan Kehidupan di Sekitar Gunung Api</h2>
+        </header>
+
+        <div class="editorial-articles">
+            <article class="editorial-article editorial-article--reverse">
+              <header class="article-heading">
+                <span class="article-number">Bagian 01</span>
+                <h3>Cara Membaca Titik dan Data pada Peta</h3>
+              </header>
+              <div class="article-content">
+                <p>Setiap lingkaran penanda pada peta mewakili gunung berapi yang telah memiliki catatan titik koordinat di dalam dataset. Warna penanda merujuk pada tingkat status yang tercatat di snapshot MAGMA, sehingga fungsinya adalah menggambarkan kategori pemantauan saat data diambil—bukan meramal jam letusan atau mengukur jangkauan bahaya secara langsung. Keterangan nama provinsi dan elevasi disertakan untuk memperjelas gambaran letak wilayahnya.</p>
+                <p>Perlu dicatat bahwa belum semua gunung berapi di dalam daftar status memiliki koordinat yang terpetakan. Selain itu, sejumlah titik koordinat diambil dari katalog kompleks vulkanik sehingga posisinya mengacu pada bentang pegunungan secara umum, bukan persis di bibir kawah yang sedang aktif. Catatan keterbatasan ini sengaja ditampilkan apa adanya agar pembaca tetap mengacu pada laporan resmi lembaga pemantau saat memeriksa kondisi lapangan.</p>
+              </div>
+            </article>
+            <article class="editorial-article">
+              <header class="article-heading">
+                <span class="article-number">Bagian 02</span>
+                <h3>Arti Empat Tingkat Status Aktivitas</h3>
+              </header>
+              <div class="article-content">
+                <p>Badan pemantau membagi aktivitas gunung berapi ke dalam empat jenjang. Level I (Normal) menandakan hasil rekaman alat maupun pengamatan visual masih berada di batas wajar. Level II (Waspada) menunjukkan mulai terlihatnya gejala peningkatan aktivitas di atas rata-rata harian. Level III (Siaga) berarti peningkatan tersebut kian nyata dan berpeluang berujung pada letusan, sedangkan Level IV (Awas) menandakan erupsi utama sedang berlangsung atau berpotensi terjadi dalam waktu dekat.</p>
+                <p>Keempat tingkat ini adalah pedoman kesiapsiagaan berdasarkan pengamatan ilmiah, bukan skala besar-kecilnya ledakan gunung. Batas radius aman yang tidak boleh dimasuki warga maupun pendaki selalu disesuaikan dengan rekomendasi resmi di setiap perubahan status. Karena aktivitas gunung api bersifat dinamis, warga diimbau selalu mengecek pengumuman terbaru dari PVMBG/MAGMA Indonesia dan tidak hanya berpatokan pada rekaman data lama.</p>
+              </div>
+            </article>
+            <article class="editorial-article editorial-article--reverse">
+              <header class="article-heading">
+                <span class="article-number">Bagian 03</span>
+                <h3>Apa Bedanya Gunung Api Aktif, Tidur, dan Padam?</h3>
+              </header>
+              <div class="article-content">
+                <p>Sebutan gunung berapi aktif diberikan pada gunung yang punya catatan sejarah letusan atau masih memperlihatkan tanda-tanda kegiatan magma serta gas menurut kajian geologi. Meski menyandang sebutan aktif, bukan berarti gunung tersebut terus-menerus memuntahkan lava setiap tahun; sebagian besar gunung aktif justru menghabiskan waktunya dalam status Normal tanpa gejolak berarti.</p>
+                <p>Dalam percakapan sehari-hari, dikenal pula istilah gunung tidur (dorman) untuk gunung yang sudah sangat lama beristirahat namun masih menyimpan potensi bangun kembali, serta gunung mati atau padam. Kendati demikian, batas di antara istilah tersebut tidak selalu kaku karena gunung yang ratusan tahun tenang tetap bisa kembali aktif. Status Level I sampai IV menggambarkan kondisi jangka pendek saat ini, sedangkan istilah aktif berkaitan dengan masa hidup gunung dalam rentang waktu geologi.</p>
+              </div>
+            </article>
+            <article class="editorial-article">
+              <header class="article-heading">
+                <span class="article-number">Bagian 04</span>
+                <h3>Pertemuan Lempeng dan Jalur Cincin Api</h3>
+              </header>
+              <div class="article-content">
+                <p>Kepulauan Indonesia berada tepat di titik temu beberapa lempeng besar kerak bumi yang terus bergerak. Desakan dan penunjaman antarlempeng ini melahirkan palung laut dalam, jalur patahan darat, serta deretan dapur magma yang menopang berdirinya ratusan gunung berapi. Posisi geografis inilah yang menempatkan Indonesia di sepanjang jalur vulkanik dan gempa Pasifik yang populer disebut Cincin Api, yakni sabuk panjang zona batas lempeng aktif yang mengelilingi cekungan Samudra Pasifik.</p>
+                <p>Cara kerja tektonik di tiap kepulauan pun tidak seragam. Sebagian besar gunung api kita lahir di atas zona subduksi tempat lempeng samudra menyusup ke bawah lempeng benua, sementara sebagian lainnya dipengaruhi oleh sistem rekahan dan sejarah batuan lokal yang rumit. Dinamika bumi ini menganugerahkan bentang alam yang subur dan indah bagi Indonesia, tetapi di saat bersamaan menuntut kesadaran mitigasi bencana yang kuat.</p>
+              </div>
+            </article>
+            <article class="editorial-article editorial-article--reverse">
+              <header class="article-heading">
+                <span class="article-number">Bagian 05</span>
+                <h3>Bagaimana Dapur Magma Membentuk Gunung Api?</h3>
+              </header>
+              <div class="article-content">
+                <p>Gunung berapi tumbuh ketika batuan cair bersuhu tinggi (magma) dari kedalaman bumi terdorong naik melewati celah kerak bumi lalu keluar ke permukaan menjadi leleran lava, lontaran batu, abu, dan gas. Di jalur penunjaman lempeng, batuan kerak samudra yang menunjam ke dalam mantel bumi membawa kandungan air dan senyawa mudah menguap yang menurunkan titik leleh batuan di atasnya, sehingga terbentuklah kantong-kantong magma baru.</p>
+                <p>Bentuk tubuh gunung yang terbangun di permukaan sangat bergantung pada kekentalan magma dan sifat erupsinya. Lava yang lebih encer mudah mengalir jauh membentuk lereng landai, sedangkan magma kental yang kaya gas cenderung menyumbat saluran kawah dan memicu letusan lontaran yang membangun kerucut gunung berlapis-lapis, kubah lava, atau cekungan kaldera dalam kurun ribuan tahun.</p>
+              </div>
+            </article>
+            <article class="editorial-article">
+              <header class="article-heading">
+                <span class="article-number">Bagian 06</span>
+                <h3>Pola Sebaran Gunung Api di Nusantara</h3>
+              </header>
+              <div class="article-content">
+                <p>Jalur gunung berapi di Indonesia membentang memanjang mulai dari punggung Pulau Sumatra, melintasi Jawa, Bali, kepulauan Nusa Tenggara, lalu melengkung ke Laut Banda, Maluku, hingga Sulawesi Utara dan Halmahera. Pola memanjang ini mengikuti lekuk zona penunjaman lempeng, namun jarak antargunung serta sifat letusannya berbeda di tiap pulau. Dua gunung yang berdiri bersebelahan sekalipun umumnya memiliki saluran magma yang terpisah.</p>
+                <p>Melihat peta sebaran membantu kita mengenali provinsi mana saja yang memiliki kepadatan gunung api tinggi. Namun, satu titik pada peta terkadang mewakili satu kompleks pegunungan luas yang di dalamnya terdapat beberapa kawah atau kerucut erupsi sekaligus. Oleh karena itu, informasi koordinat dan nama wilayah pada peta perlu dibaca sebagai orientasi geografis, bukan penunjuk tunggal titik lubang kawah.</p>
+              </div>
+            </article>
+            <article class="editorial-article editorial-article--reverse">
+              <header class="article-heading">
+                <span class="article-number">Bagian 07</span>
+                <h3>Kaitan antara Gempa Bumi dan Aktivitas Gunung Api</h3>
+              </header>
+              <div class="article-content">
+                <p>Di sekitar kawasan gunung berapi, getaran gempa bisa berasal dari dua sumber yang berbeda: pergeseran patahan lempeng (gempa tektonik) atau desakan magma dan gas yang meretakkan batuan di bawah tubuh gunung (gempa vulkanik). Rekaman gempa vulkanik yang terus meningkat sering menjadi sinyal penting bagi petugas pos pengamatan untuk membaca naiknya tekanan dari dalam dapur magma. Sebaliknya, gempa tektonik yang terasa kuat oleh warga belum tentu memicu letusan gunung di dekatnya.</p>
+                <p>Perlu diluruskan pula bahwa guncangan gempa bumi tidak secara langsung menyuburkan tanah. Keterkaitannya terletak pada proses tektonik yang membentuk jalur gunung berapi, sementara kesuburan tanah baru lahir jauh kemudian setelah abu dan batuan hasil letusan melapuk di permukaan. Membedakan proses gempa, erupsi, dan pelapukan tanah membantu masyarakat menyikapi gejala alam dengan lebih tepat.</p>
+              </div>
+            </article>
+            <article class="editorial-article">
+              <header class="article-heading">
+                <span class="article-number">Bagian 08</span>
+                <h3>Bagaimana Petugas Memantau Gunung Api Setiap Hari?</h3>
+              </header>
+              <div class="article-content">
+                <p>Pengawasan gunung berapi memadukan pengamatan mata langsung dari pos pantau dengan pembacaan alat ukur di lereng gunung. Setiap hari petugas memeriksa rekaman getaran seismograf, perubahan kemiringan atau penggembungan tubuh gunung, suhu kawah, warna dan tinggi hembusan asap, hingga komposisi gas vulkanik. Seluruh catatan itu dibandingkan dengan rekam jejak normal gunung tersebut, karena setiap gunung memiliki tabiat dasar yang berbeda.</p>
+                <p>Kini pemantauan lapangan juga diperkuat oleh sensor deformasi berbasis satelit, kamera termal, dan citra penginderaan jauh. Dalam ilmu kegunungapian, perubahan status tidak pernah diputuskan hanya dari satu angka alat ukur semata. Petugas harus membaca gabungan berbagai sinyal yang bergerak serempak dari waktu ke waktu untuk menilai apakah magma benar-benar sedang bergerak mendekati permukaan.</p>
+              </div>
+            </article>
+            <article class="editorial-article editorial-article--reverse">
+              <header class="article-heading">
+                <span class="article-number">Bagian 09</span>
+                <h3>Mengapa Jam dan Tanggal Letusan Tidak Bisa Dipastikan?</h3>
+              </header>
+              <div class="article-content">
+                <p>Melalui jaringan alat pantau, para ahli vulkanologi dapat mengenali tanda-tanda bahwa sebuah gunung sedang mengalami peningkatan tekanan—misalnya dari lonjakan gempa vulkanik, naiknya suhu kawah, atau perubahan hembusan gas. Namun, mengenali gejala peningkatan aktivitas tidak sama dengan mengetahui tanggal dan jam persis kapan gunung akan meletus. Perjalanan magma menuju permukaan bisa berlangsung cepat, melambat, atau bahkan berhenti di tengah jalan tanpa diakhiri letusan.</p>
+                <p>Karena jalur batuan dan tekanan gas di bawah tanah sangat rumit, pemantauan difokuskan untuk membaca kecenderungan naiknya risiko dari hari ke hari. Penilaian pun terus diperbarui setiap kali data baru masuk. Bagi warga di sekitar lereng, mematuhi batas radius bahaya, mengenali jalur evakuasi desa, dan mengikuti arahan petugas jauh lebih menyelamatkan daripada menunggu kepastian jam letusan yang memang belum bisa ditentukan secara mutlak oleh ilmu pengetahuan.</p>
+              </div>
+            </article>
+            <article class="editorial-article">
+              <header class="article-heading">
+                <span class="article-number">Bagian 10</span>
+                <h3>Mengenali Ragam Bahaya Saat Erupsi</h3>
+              </header>
+              <div class="article-content">
+                <p>Ancaman gunung berapi tidak hanya berupa leleran pijar lava. Bahaya yang justru bergerak jauh lebih cepat adalah awan panas guguran maupun letusan, lontaran batu pijar di sekitar kawah, semburan gas beracun, serta hujan abu tebal yang terbawa angin. Selain bahaya langsung saat erupsi, tumpukan material lepas di puncak dan lereng juga dapat berubah menjadi banjir lahar dingin maupun lahar hujan ketika tersapu curah hujan lebat di hulu sungai.</p>
+                <p>Abu vulkanik yang halus dapat mengganggu pernapasan, merusak mesin pesawat dan kendaraan, menutup atap rumah hingga rawan roboh, serta melayukan tanaman pertanian. Sementara itu, aliran awan panas dan lahar cenderung mengikuti lembah atau alur sungai yang berhulu di kawah. Itulah sebabnya setiap gunung memiliki peta kawasan rawan bencana tersendiri yang wajib dijadikan acuan penataan ruang dan evakuasi.</p>
+              </div>
+            </article>
+            <article class="editorial-article editorial-article--reverse">
+              <header class="article-heading">
+                <span class="article-number">Bagian 11</span>
+                <h3>Dampak Letusan bagi Kesehatan, Alam, dan Ekonomi</h3>
+              </header>
+              <div class="article-content">
+                <p>Butiran abu vulkanik sebenarnya merupakan serpihan batuan dan gelas mineral halus yang tajam, sehingga bila terhirup atau mengenai mata dapat memicu iritasi serius serta memperburuk gangguan saluran napas. Jatuhan abu juga kerap mencemari penampungan air bersih terbuka, melumpuhkan jalur logistik dan bandara, serta memaksa sekolah maupun tempat kerja menghentikan kegiatan sementara waktu.</p>
+                <p>Bagi lingkungan dan perekonomian warga lereng, erupsi dapat merusak kebun sayur, lahan pertanian, ternak, hingga fasilitas wisata dan tempat tinggal. Pemulihan pasca-erupsi menuntut pembersihan material abu secara aman, pemulihan pasokan air bersih, pendampingan mata pencaharian petani, serta perbaikan infrastruktur dengan tetap memperhitungkan ancaman banjir lahar susulan di musim hujan.</p>
+              </div>
+            </article>
+            <article class="editorial-article">
+              <header class="article-heading">
+                <span class="article-number">Bagian 12</span>
+                <h3>Proses di Balik Suburnya Tanah Vulkanik</h3>
+              </header>
+              <div class="article-content">
+                <p>Di balik bahayanya, letusan gunung berapi membawa keluar material segar dari perut bumi berupa abu, pasir vulkanik, lapili, dan batuan beku yang kaya akan unsur mineral pembentuk hara. Ketika material baru ini terpapar air hujan, perubahan suhu, serta kerja mikroorganisme tanah dari tahun ke tahun, batuan tersebut melapuk dan melepaskan unsur hara penting yang dibutuhkan akar tanaman. Struktur tanah yang terbentuk pun umumnya gembur dan mampu menahan air dengan baik.</p>
+                <p>Namun, kesuburan itu tidak muncul seketika sehari setelah letusan usai. Endapan abu segar justru harus melewati proses pelapukan alami dan bercampur dengan bahan organik terlebih dahulu sebelum siap menopang pertanian yang subur. Cepat-lambatnya proses ini sangat dipengaruhi oleh curah hujan, suhu udara pegunungan, kemiringan lereng, jenis mineral batuan, serta cara petani mengolah lahannya.</p>
+              </div>
+            </article>
+            <article class="editorial-article editorial-article--reverse">
+              <header class="article-heading">
+                <span class="article-number">Bagian 13</span>
+                <h3>Mengapa Tidak Semua Tanah Vulkanik Otomatis Subur?</h3>
+              </header>
+              <div class="article-content">
+                <p>Anggapan bahwa setiap jengkal tanah di sekitar gunung api pasti langsung subur kurang tepat. Lapisan abu atau pasir yang baru dimuntahkan kawah sering kali bersifat asam, miskin unsur organik, atau mengeras seperti kerak saat mengering sehingga akar tanaman muda sulit menembusnya. Selain itu, endapan material lepas di lereng yang terjal sangat mudah hanyut tergerus air hujan sebelum sempat melapuk menjadi tanah matang.</p>
+                <p>Tingkat kesuburan lahan vulkanik amat ditentukan oleh umur pelapukan endapan, susunan kimia magma asalnya, kelancaran drainase tanah, dan ketersediaan humus. Ada lereng gunung yang sangat cocok untuk perkebunan teh dan sayur mayur, namun ada pula area berpasir bekas aliran lahar yang membutuhkan pengolahan tanah khusus serta pemilihan tanaman yang tepat agar dapat berproduksi dengan baik.</p>
+              </div>
+            </article>
+            <article class="editorial-article">
+              <header class="article-heading">
+                <span class="article-number">Bagian 14</span>
+                <h3>Peran Gunung Api bagi Sumber Air dan Pertanian Lereng</h3>
+              </header>
+              <div class="article-content">
+                <p>Tubuh gunung yang menjulang tinggi membantu menangkap uap air dan awan hujan, lalu menyimpannya melalui hutan pegunungan dan lapisan batuan berpori sebagai mata air serta aliran sungai yang mengalir sepanjang tahun. Berkat perpaduan udara sejuk, pasokan air irigasi yang melimpah, dan tanah vulkanik yang telah melapuk, kawasan kaki serta lereng gunung menjadi sentra penghasil beras, kopi, sayur-sayuran, dan buah-buahan di Indonesia.</p>
+                <p>Kendati demikian, sistem sungai yang berhulu di gunung api juga menjadi jalur mengalirnya sedimen dan lahar ketika terjadi erupsi maupun hujan ekstrem. Oleh karena itu, pengelolaan pertanian di kawasan lereng perlu menjaga sabuk hutan lindung di bagian atas, menerapkan terasering untuk menahan erosi tanah, serta mengamankan bangunan irigasi dari potensi terjangan material lahar.</p>
+              </div>
+            </article>
+            <article class="editorial-article editorial-article--reverse">
+              <header class="article-heading">
+                <span class="article-number">Bagian 15</span>
+                <h3>Potensi Panas Bumi, Bahan Tambang, dan Wisata Alam</h3>
+              </header>
+              <div class="article-content">
+                <p>Panas yang tersimpan di sekitar sistem vulkanik memanaskan air bawah tanah dan menciptakan sistem hidrotermal. Di sejumlah wilayah dengan struktur geologi yang mendukung, uap panas ini dapat dikelola menjadi pembangkit listrik tenaga panas bumi (geotermal) yang ramah lingkungan. Selain itu, endapan pasir dan batu di alur sungai lereng gunung menjadi bahan bangunan penting bagi pembangunan, meski penambangannya wajib diatur agar tidak merusak tebing sungai atau membahayakan pekerja dari terjangan lahar tiba-tiba.</p>
+                <p>Keindahan kawah, danau vulkanik, sumber air panas, dan jalur pendakian juga menggerakkan ekonomi wisata warga sekitar. Agar manfaat ekonomi ini tidak berubah menjadi petaka, pengelola wisata dan pengunjung harus disiplin mematuhi batas zona aman, memantau perubahan cuaca serta gas kawah, dan segera menutup jalur kunjungan begitu status gunung dinaikkan oleh lembaga berwenang.</p>
+              </div>
+            </article>
+            <article class="editorial-article">
+              <header class="article-heading">
+                <span class="article-number">Bagian 16</span>
+                <h3>Hidup Siaga dan Harmonis di Kawasan Gunung Api</h3>
+              </header>
+              <div class="article-content">
+                <p>Bagi jutaan warga Indonesia yang tinggal di sekitar kaki gunung berapi, gunung adalah ruang hidup yang memberi penghidupan sekaligus menyimpan potensi bahaya. Kunci hidup berdampingan secara aman terletak pada keseimbangan antara memanfaatkan kesuburan alamnya di masa tenang dan mematuhi rambu keselamatan ketika gunung mulai menunjukkan tanda peningkatan aktivitas. Kearifan lokal warga dalam membaca tanda alam di sekitar lereng pun dapat berjalan beriringan dengan data pantauan ilmiah.</p>
+                <p>Kesiapsiagaan yang tangguh lahir dari kerja sama antara petugas pos pengamatan, pemerintah daerah, sekolah, relawan desa, dan setiap keluarga. Mengenal peta zona bahaya, memahami arti tiap level status gunung, menjaga kelestarian lereng, serta rutin berlatih jalur evakuasi akan membantu masyarakat tetap tenang, sigap, dan selamat saat menghadapi dinamika bumi Nusantara.</p>
+              </div>
+            </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="./features/site-shell.js?v=9"></script>
+  <script src="../main/features/theme-toggle.js?v=9"></script>
+  <script src="./backend/volcano-map.js?v=9"></script>
+</body>
+</html>
