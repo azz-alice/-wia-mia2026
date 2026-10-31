@@ -15,10 +15,8 @@
       skip.href = "#highlight-section";
       document.body.prepend(skip);
       const hero = el("header", "hero");
-      hero.innerHTML = `<div class="hero-head"><div class="hero-intro"><h1>Jejak Titik Panas &amp; Kualitas Udara</h1></div><div class="stats" id="stats" aria-live="polite"></div></div>`;
+      hero.innerHTML = `<div class="hero-head"><div class="hero-intro"><h1>Jejak Titik Panas &amp; Kualitas Udara</h1></div></div>`;
       mapSection.before(hero);
-      const statsEl = hero.querySelector("#stats");
-      statsEl.append(el("div", "stat-card stat-status", "Memuat statistik titik panas…"));
       const layout = el("div", "map-layout");
       layout.setAttribute("role", "region");
       layout.setAttribute("aria-label", "Peta interaktif titik panas karhutla per provinsi");
@@ -26,7 +24,7 @@
       const loading = el("div", "map-status is-loading", "Memuat peta dan data titik panas…");
       loading.setAttribute("role", "status");
       layout.append(mapEl, loading);
-      return { mapSection, mapEl, statsEl, layout, loading, el };
+      return { mapSection, mapEl, layout, loading, el };
     }
   };
 })();

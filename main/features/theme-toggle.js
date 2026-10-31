@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const KEY = "site-theme", SKEY = "site-theme-session", root = document.documentElement;
+  const KEY = "site-theme-v2", SKEY = "site-theme-session-v2", root = document.documentElement;
   let saved = null;
   try { saved = localStorage.getItem(KEY) || sessionStorage.getItem(SKEY); } catch (_) {}
   const SUN_SVG = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor" fill-opacity=".18"/><path d="M12 2.5v2.3M12 19.2v2.3M4.2 12H2.5M21.5 12h-2.3M5.8 5.8l1.6 1.6M16.6 16.6l1.6 1.6M18.2 5.8l-1.6 1.6M7.4 16.6l-1.6 1.6"/></svg>`;
@@ -22,5 +22,5 @@
     apply(next);
   });
   document.body.append(btn);
-  apply(saved === "light" || saved === "dark" ? saved : (root.dataset.theme || "dark"));
+  apply(saved === "light" || saved === "dark" ? saved : (root.dataset.theme || "light"));
 })();

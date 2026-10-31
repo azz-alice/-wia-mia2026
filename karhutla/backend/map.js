@@ -12,10 +12,10 @@
     { min: 0, label: "Sangat rendah", range: "Di bawah 100" }
   ].map((l, i) => ({ ...l, get color() { return cssVar(`--lv-${i}`); } }));
   const PM25_LEVELS = [
-    { max: 12, stop: 12, color: [191, 226, 120], alpha: 0.22, label: "Baik", range: "0–12 µg/m³" },
-    { max: 35.4, stop: 28, color: [247, 226, 73], alpha: 0.52, label: "Sedang", range: "12,1–35,4 µg/m³" },
-    { max: 55.4, stop: 48, color: [232, 125, 45], alpha: 0.72, label: "Tidak sehat", range: "35,5–55,4 µg/m³" },
-    { max: Infinity, stop: 72, color: [194, 65, 57], alpha: 0.88, label: "Berbahaya", range: ">55,4 µg/m³" }
+    { max: 12, stop: 12, color: [45, 212, 191], alpha: 0.28, label: "Baik", range: "0–12 µg/m³" },
+    { max: 35.4, stop: 28, color: [14, 165, 233], alpha: 0.54, label: "Sedang", range: "12,1–35,4 µg/m³" },
+    { max: 55.4, stop: 48, color: [37, 99, 235], alpha: 0.74, label: "Tidak sehat", range: "35,5–55,4 µg/m³" },
+    { max: Infinity, stop: 72, color: [67, 56, 202], alpha: 0.90, label: "Berbahaya", range: ">55,4 µg/m³" }
   ];
   const pm25DisplayColor = item => {
     const f = document.documentElement.dataset.theme === "light" ? 0.94 : 1.15;
@@ -40,7 +40,7 @@
 
   const shell = window.SiteShell?.init();
   if (!shell) return;
-  const { mapEl, statsEl, layout, loading, el } = shell;
+  const { mapEl, layout, loading, el } = shell;
 
   const showFailure = msg => {
     loading.remove();
@@ -52,7 +52,6 @@
     retry.addEventListener("click", () => location.reload());
     box.append(el("strong", null, "Peta belum dapat ditampilkan"), el("span", null, msg), retry);
     layout.append(box);
-    statsEl.replaceChildren(el("div", "stat-card stat-status", "Statistik tidak tersedia karena data gagal dimuat."));
   };
 
   if (typeof L === "undefined") return showFailure("Pustaka peta gagal dimuat. Periksa koneksi internet Anda, lalu muat ulang halaman.");
@@ -134,46 +133,74 @@
       return { name: title(getName(f)), count, level: getLevel(count) };
     };
 
-    const featureByKey = new Map(geojson.features.map(f => [normalize(getName(f)), f]));
-    const airRanked = geojson.features
-      .map(f => ({ key: normalize(getName(f)), name: title(getName(f)), pm25: provincePm25(f) }))
-      .filter(d => d.pm25 != null)
-      .sort((a, b) => b.pm25 - a.pm25);
+    const chartProvinces = geojson.features
+      .map(f => {
+        const key = normalize(getName(f));
+        return {
+          key,
+          name: title(getName(f)),
+          hotspots: counts.get(key) ?? 0,
+          pm25: provincePm25(f) ?? 0
+        };
+      })
+      .sort((a, b) => (b.hotspots - a.hotspots) || a.name.localeCompare(b.name, "id"));
 
-    const chartProvinces = [], seenKeys = new Set();
-    const addProv = (key, rawName) => {
-      if (!key || seenKeys.has(key) || chartProvinces.length >= 5) return;
-      seenKeys.add(key);
-      const feat = featureByKey.get(key);
-      chartProvinces.push({ name: title(rawName), hotspots: counts.get(key) ?? 0, pm25: feat ? (provincePm25(feat) ?? 0) : 0 });
-    };
-    sorted.slice(0, 3).forEach(([n]) => addProv(normalize(n), n));
-    airRanked.forEach(d => addProv(d.key, d.name));
-
+    const colWidth = 86;
+    const svgWidth = chartProvinces.length * colWidth;
+    const svgHeight = 176;
     const maxHotspots = Math.max(...chartProvinces.map(d => d.hotspots), 1);
     const maxPm25 = Math.max(...chartProvinces.map(d => d.pm25), 1);
-    const chartWrap = el("div", "vchart"), chartMeta = el("div", "vchart-meta");
+
+    const statsPanel = el("div", "map-stats-panel");
+    statsPanel.hidden = true;
+    statsPanel.setAttribute("role", "region");
+    statsPanel.setAttribute("aria-label", "Diagram statistik garis seluruh provinsi untuk titik panas dan kualitas udara");
+
+    const chartHeader = el("div", "vchart-header");
+    const chartTitle = el("h3", "vchart-title", `Diagram Statistik ${chartProvinces.length} Provinsi (Karhutla & Kualitas Udara)`);
+    const chartMeta = el("div", "vchart-meta");
     const metaHot = el("span", "vchart-key is-black"), metaAir = el("span", "vchart-key is-blue");
-    metaHot.append(el("i"), "Titik panas");
-    metaAir.append(el("i"), "Indeks udara (µg/m³)");
+    metaHot.append(el("i"), "Titik panas (Karhutla)");
+    metaAir.append(el("i"), "Indeks udara PM2.5 (µg/m³)");
     chartMeta.append(metaHot, metaAir);
 
+    const chartControls = el("div", "vchart-controls");
+    const prevBtn = el("button", "vchart-btn", "◀ Geser Kiri");
+    prevBtn.type = "button";
+    prevBtn.setAttribute("aria-label", "Geser diagram ke kiri");
+    const nextBtn = el("button", "vchart-btn", "Geser Kanan ▶");
+    nextBtn.type = "button";
+    nextBtn.setAttribute("aria-label", "Geser diagram ke kanan");
+    const chartHint = el("span", "vchart-hint", "Geser diagram, gunakan scroll mouse, atau tombol geser di samping");
+    chartControls.append(prevBtn, chartHint, nextBtn);
+    chartHeader.append(chartTitle, chartMeta, chartControls);
+
+    const chartScroll = el("div", "vchart-scroll");
+    chartScroll.setAttribute("tabindex", "0");
+    chartScroll.setAttribute("role", "region");
+    chartScroll.setAttribute("aria-label", "Grafik statistik seluruh provinsi dapat digeser secara horizontal");
+    const chartWrap = el("div", "vchart");
+    chartWrap.style.width = `${svgWidth}px`;
+
     const valsRow = el("div", "vchart-row"), namesRow = el("div", "vchart-row");
+    valsRow.style.gridTemplateColumns = `repeat(${chartProvinces.length}, ${colWidth}px)`;
+    namesRow.style.gridTemplateColumns = `repeat(${chartProvinces.length}, ${colWidth}px)`;
+
     const svgEl = (tag, attrs) => {
       const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
       Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, String(v)));
       return n;
     };
-    const svg = svgEl("svg", { viewBox: "0 0 420 92", class: "vchart-svg", "aria-hidden": "true" });
+    const svg = svgEl("svg", { viewBox: `0 0 ${svgWidth} ${svgHeight}`, class: "vchart-svg", "aria-hidden": "true" });
     const hotPts = [], airPts = [];
 
     chartProvinces.forEach((item, idx) => {
-      const x = 42 + idx * 84;
-      const yHot = Math.round(80 - (item.hotspots / maxHotspots) * 66);
-      const yAir = Math.round(82 - (item.pm25 / (maxPm25 * 1.12)) * 64);
+      const x = Math.round(colWidth / 2 + idx * colWidth);
+      const yHot = Math.round(154 - (item.hotspots / maxHotspots) * 132);
+      const yAir = Math.round(156 - (item.pm25 / (maxPm25 * 1.12)) * 128);
       hotPts.push([x, yHot]);
       airPts.push([x, yAir]);
-      svg.append(svgEl("line", { x1: x, y1: 6, x2: x, y2: 86, class: "vchart-pillar" }));
+      svg.append(svgEl("line", { x1: x, y1: 12, x2: x, y2: 164, class: "vchart-pillar" }));
       const vals = el("div", "vchart-vals");
       vals.append(el("span", "vval-black", fmt(item.hotspots)), el("span", "vval-blue", item.pm25.toFixed(1).replace(".", ",")));
       valsRow.append(vals);
@@ -186,10 +213,63 @@
       svgEl("polyline", { points: hotStr, class: "vchart-line vchart-line-black" }),
       svgEl("polyline", { points: airStr, class: "vchart-line vchart-line-blue" })
     );
-    hotPts.forEach(([cx, cy]) => svg.append(svgEl("circle", { cx, cy, r: 3.6, class: "vchart-dot vchart-dot-black" })));
-    airPts.forEach(([cx, cy]) => svg.append(svgEl("circle", { cx, cy, r: 3.6, class: "vchart-dot vchart-dot-blue" })));
-    chartWrap.append(chartMeta, valsRow, svg, namesRow);
-    statsEl.replaceChildren(chartWrap);
+    hotPts.forEach(([cx, cy]) => svg.append(svgEl("circle", { cx, cy, r: 4, class: "vchart-dot vchart-dot-black" })));
+    airPts.forEach(([cx, cy]) => svg.append(svgEl("circle", { cx, cy, r: 4, class: "vchart-dot vchart-dot-blue" })));
+    chartWrap.append(valsRow, svg, namesRow);
+    chartScroll.append(chartWrap);
+    statsPanel.append(chartHeader, chartScroll);
+
+    prevBtn.addEventListener("click", () => chartScroll.scrollBy({ left: -340, behavior: "smooth" }));
+    nextBtn.addEventListener("click", () => chartScroll.scrollBy({ left: 340, behavior: "smooth" }));
+
+    chartScroll.addEventListener("wheel", e => {
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (delta !== 0) {
+        chartScroll.scrollLeft += delta;
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, { passive: false });
+
+    let isPointerDown = false;
+    let startX = 0;
+    let scrollStart = 0;
+
+    chartScroll.addEventListener("mousedown", e => {
+      if (e.button !== 0) return;
+      isPointerDown = true;
+      startX = e.pageX;
+      scrollStart = chartScroll.scrollLeft;
+      chartScroll.classList.add("is-dragging");
+    });
+
+    window.addEventListener("mousemove", e => {
+      if (!isPointerDown) return;
+      e.preventDefault();
+      const walk = (e.pageX - startX) * 1.5;
+      chartScroll.scrollLeft = scrollStart - walk;
+    });
+
+    window.addEventListener("mouseup", () => {
+      if (isPointerDown) {
+        isPointerDown = false;
+        chartScroll.classList.remove("is-dragging");
+      }
+    });
+
+    chartScroll.addEventListener("keydown", e => {
+      if (e.key === "ArrowLeft") {
+        chartScroll.scrollBy({ left: -180, behavior: "smooth" });
+        e.preventDefault();
+      } else if (e.key === "ArrowRight") {
+        chartScroll.scrollBy({ left: 180, behavior: "smooth" });
+        e.preventDefault();
+      }
+    });
+
+    statsPanel.addEventListener("mousedown", e => e.stopPropagation());
+    statsPanel.addEventListener("touchstart", e => e.stopPropagation(), { passive: true });
+    mapEl.append(statsPanel);
 
     let activeMode = "hotspots", selected = null;
     const popupContent = (info, feature) => {
@@ -431,23 +511,34 @@
       const box = L.DomUtil.create("div", "map-mode-control leaflet-bar");
       const hotBtn = el("button", "map-mode-button is-active", "Karhutla");
       const airBtn = el("button", "map-mode-button", "Kualitas udara");
-      hotBtn.type = airBtn.type = "button";
+      const statBtn = el("button", "map-mode-button", "Statistik");
+      hotBtn.type = airBtn.type = statBtn.type = "button";
       hotBtn.setAttribute("aria-pressed", "true");
       airBtn.setAttribute("aria-pressed", "false");
+      statBtn.setAttribute("aria-pressed", "false");
       const setMode = mode => {
-        activeMode = mode;
+        const isStats = mode === "stats";
+        if (!isStats) activeMode = mode;
         hotBtn.classList.toggle("is-active", mode === "hotspots");
         airBtn.classList.toggle("is-active", mode === "air");
+        statBtn.classList.toggle("is-active", isStats);
         hotBtn.setAttribute("aria-pressed", String(mode === "hotspots"));
         airBtn.setAttribute("aria-pressed", String(mode === "air"));
-        if (airOverlay) mode === "air" ? airOverlay.addTo(map) : map.removeLayer(airOverlay);
-        provinces.eachLayer(l => provinces.resetStyle(l));
-        renderLegend(mode);
-        if (map._popup && selected) selected.openPopup(selected.getBounds().getCenter());
+        statBtn.setAttribute("aria-pressed", String(isStats));
+        statsPanel.hidden = !isStats;
+        if (!isStats) {
+          if (airOverlay) mode === "air" ? airOverlay.addTo(map) : map.removeLayer(airOverlay);
+          provinces.eachLayer(l => provinces.resetStyle(l));
+          renderLegend(mode);
+          if (map._popup && selected) selected.openPopup(selected.getBounds().getCenter());
+        } else {
+          map.closePopup();
+        }
       };
       hotBtn.addEventListener("click", () => setMode("hotspots"));
       airBtn.addEventListener("click", () => setMode("air"));
-      box.append(hotBtn, airBtn);
+      statBtn.addEventListener("click", () => setMode("stats"));
+      box.append(hotBtn, airBtn, statBtn);
       L.DomEvent.disableClickPropagation(box);
       return box;
     };

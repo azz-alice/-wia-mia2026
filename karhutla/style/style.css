@@ -27,28 +27,71 @@ section { margin-block: 0 40px; }
 .site-nav-link.is-active { background: var(--accent); color: var(--on-accent); }
 
 .hero { position: relative; width: min(var(--container), calc(100% - 32px)); margin: 76px auto 20px; padding: 4px 0 22px; border-bottom: 1px solid var(--line); }
-.hero-head { display: grid; grid-template-columns: 1.65fr 1.15fr; align-items: center; gap: 32px; }
-.hero-intro { width: 100%; min-width: 0; padding-left: 18px; border-left: 3px solid var(--accent); display: flex; align-items: center; justify-content: flex-start; text-align: left; }
+.hero-head { width: 100%; min-width: 0; display: flex; align-items: center; justify-content: center; }
+.hero-intro { width: auto; min-width: 0; padding-left: 18px; border-left: 3px solid var(--accent); display: inline-flex; align-items: center; justify-content: center; text-align: center; }
 .hero h1 { margin: 0; font-size: clamp(24px, 3.2vw, 38px); font-weight: 700; letter-spacing: -.012em; white-space: nowrap; }
 
-.stats { width: 100%; min-width: 0; }
-.stat-card, .vchart { width: 100%; min-width: 0; padding: 0; border: 0; background: transparent; }
-.stat-status { color: var(--muted); font-size: 14px; }
+.map-stats-panel { position: absolute; inset: 0; z-index: 850; display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; padding: 66px 20px 18px; background: var(--bg); color: var(--text); overflow-y: auto; cursor: default; }
+.map-stats-panel[hidden] { display: none !important; }
+.vchart-header { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.vchart-title { margin: 0; font-size: clamp(16px, 2vw, 22px); font-weight: 700; color: var(--text); }
+.vchart-hint { margin: 0; font-size: 12px; color: var(--muted); }
 
-.vchart-meta { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 8px; font-size: 11.5px; font-weight: 700; color: var(--text); }
+.vchart-controls { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin-top: 2px; flex-wrap: wrap; }
+.vchart-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--control-bg);
+  color: var(--text);
+  font: 700 12px var(--font-body);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s, color 0.15s, transform 0.1s;
+}
+.vchart-btn:hover { background: var(--control-hover); color: var(--accent); }
+.vchart-btn:active { transform: scale(0.96); }
+
+.vchart-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 14px 10px 18px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 14px;
+  background: var(--control-bg);
+  cursor: grab;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: auto;
+  scrollbar-color: var(--accent) var(--line);
+}
+.vchart-scroll.is-dragging { cursor: grabbing; user-select: none; }
+.vchart-scroll:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.vchart-scroll::-webkit-scrollbar { height: 11px; }
+.vchart-scroll::-webkit-scrollbar-track { background: var(--line); border-radius: 999px; margin: 0 10px; }
+.vchart-scroll::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 999px; border: 2px solid var(--control-bg); }
+.vchart-scroll::-webkit-scrollbar-thumb:hover { background: var(--accent-strong); }
+.vchart { min-width: 0; padding: 4px 0; border: 0; background: transparent; }
+
+.vchart-meta { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 2px 0; font-size: 12px; font-weight: 700; color: var(--text); flex-wrap: wrap; }
 .vchart-key { display: inline-flex; align-items: center; gap: 6px; }
 .vchart-key i { display: inline-block; width: 14px; height: 3px; border-radius: 999px; }
 .vchart-key.is-black i { background: var(--chart-black); box-shadow: 0 0 0 1px rgb(255 255 255 / 55%); }
 .vchart-key.is-blue i { background: var(--chart-blue); }
 :root[data-theme="light"] .vchart-key.is-black i { box-shadow: none; }
 
-.vchart-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; }
-.vchart-vals { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 0 2px; font-size: 11px; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.vchart-row { display: grid; align-items: start; }
+.vchart-vals { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0 3px; font-size: 11px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
 .vval-black { color: var(--text); }
 .vval-blue { color: var(--chart-blue); }
 
-.vchart-svg { display: block; width: 100%; height: auto; margin: 4px 0; overflow: visible; }
-.vchart-pillar { stroke: var(--line-strong); stroke-width: 1.5; stroke-linecap: round; }
+.vchart-svg { display: block; width: 100%; height: 176px; margin: 6px 0; overflow: visible; }
+.vchart-pillar { stroke: var(--line); stroke-width: 1.5; stroke-linecap: round; }
 .vchart-line { fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .vchart-line-black-halo { stroke: #ffffff; stroke-width: 4.4; }
 .vchart-line-black { stroke: var(--chart-black); stroke-width: 2.6; }
@@ -57,7 +100,7 @@ section { margin-block: 0 40px; }
 .vchart-dot-blue { fill: var(--chart-blue); stroke: var(--bg); stroke-width: 1.2; }
 :root[data-theme="light"] .vchart-line-black-halo { opacity: 0; }
 :root[data-theme="light"] .vchart-dot-black { stroke: var(--bg); }
-.vchart-name { padding: 0 2px; color: var(--text); font-size: 11px; font-weight: 700; line-height: 1.2; text-align: center; overflow-wrap: break-word; }
+.vchart-name { padding: 0 4px; color: var(--text); font-size: 11px; font-weight: 700; line-height: 1.25; text-align: center; overflow-wrap: break-word; }
 
 .map-section { display: block; width: min(var(--container), calc(100% - 32px)); margin: 0 auto 48px; }
 .map-layout { position: relative; width: 100%; height: clamp(460px, 72vh, 760px); height: clamp(460px, 72svh, 760px); }
@@ -145,8 +188,8 @@ path.leaflet-interactive:focus-visible { outline: 2px solid var(--focus); outlin
 
 @media (max-width: 900px) {
   .site-nav-brand { display: none; }
-  .hero-head, .highlight-section { grid-template-columns: 1fr; gap: 18px; }
-  .hero-intro, .stats { transform: none; }
+  .highlight-section { grid-template-columns: 1fr; gap: 18px; }
+  .hero-intro { transform: none; }
   .editorial-article, .editorial-article--reverse { grid-template-columns: 1fr; gap: 22px; padding: 44px 0; }
   .editorial-article--reverse .article-heading, .editorial-article--reverse .article-content { grid-column: 1; grid-row: auto; }
   .article-heading { position: static; }
@@ -165,6 +208,10 @@ path.leaflet-interactive:focus-visible { outline: 2px solid var(--focus); outlin
   .map-layout { height: clamp(420px, 66vh, 600px); height: clamp(420px, 66svh, 600px); }
   .map-container, .map-container.leaflet-container { border-radius: 14px; }
   .map-legend { width: min(190px, 56vw); }
+  .map-stats-panel { padding: 60px 10px 12px; gap: 8px; }
+  .vchart-controls { gap: 8px; }
+  .vchart-btn { padding: 5px 10px; font-size: 11px; }
+  .vchart-hint { font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
