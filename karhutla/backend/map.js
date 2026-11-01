@@ -66,6 +66,15 @@
   map.createPane("provinceOverlay").style.zIndex = 400;
   L.control.zoom({ position: "bottomright" }).addTo(map);
 
+  const zoomInBtn = mapEl.querySelector(".leaflet-control-zoom-in");
+  const zoomOutBtn = mapEl.querySelector(".leaflet-control-zoom-out");
+  if (zoomInBtn) {
+    zoomInBtn.innerHTML = `<svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+  }
+  if (zoomOutBtn) {
+    zoomOutBtn.innerHTML = `<svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><path d="M2 7h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+  }
+
   let panPt = null;
   mapEl.addEventListener("contextmenu", e => e.preventDefault());
   mapEl.addEventListener("mousedown", e => { if (e.button === 2) { panPt = [e.clientX, e.clientY]; e.preventDefault(); } });
@@ -127,149 +136,213 @@
     };
 
     const counts = new Map(entries.map(([n, c]) => [normalize(n), c]));
-    const sorted = [...entries].sort((a, b) => b[1] - a[1]);
     const infoOf = f => {
       const k = normalize(getName(f)), count = counts.has(k) ? counts.get(k) : null;
       return { name: title(getName(f)), count, level: getLevel(count) };
     };
 
-    const chartProvinces = geojson.features
-      .map(f => {
-        const key = normalize(getName(f));
+    const ABBR = {
+      "ACEH": "Aceh", "BALI": "Bali", "BANTEN": "Banten", "BENGKULU": "Bengkulu",
+      "DAERAH ISTIMEWA YOGYAKARTA": "DIY", "DKI JAKARTA": "DKI", "GORONTALO": "Gorontalo",
+      "JAMBI": "Jambi", "JAWA BARAT": "Jabar", "JAWA TENGAH": "Jateng", "JAWA TIMUR": "Jatim",
+      "KALIMANTAN BARAT": "Kalbar", "KALIMANTAN SELATAN": "Kalsel", "KALIMANTAN TENGAH": "Kalteng",
+      "KALIMANTAN TIMUR": "Kaltim", "KALIMANTAN UTARA": "Kaltara", "KEPULAUAN BANGKA BELITUNG": "Babel",
+      "KEPULAUAN RIAU": "Kepri", "LAMPUNG": "Lampung", "MALUKU": "Maluku", "MALUKU UTARA": "Malut",
+      "NUSA TENGGARA BARAT": "NTB", "NUSA TENGGARA TIMUR": "NTT", "PAPUA": "Papua",
+      "PAPUA BARAT": "Pabar", "PAPUA BARAT DAYA": "PBD", "PAPUA PEGUNUNGAN": "Papeg",
+      "PAPUA SELATAN": "Pasel", "PAPUA TENGAH": "Pateng", "RIAU": "Riau", "SULAWESI BARAT": "Sulbar",
+      "SULAWESI SELATAN": "Sulsel", "SULAWESI TENGAH": "Sulteng", "SULAWESI TENGGARA": "Sultra",
+      "SULAWESI UTARA": "Sulut", "SUMATERA BARAT": "Sumbar", "SUMATERA SELATAN": "Sumsel",
+      "SUMATERA UTARA": "Sumut"
+    };
+
+    const pm25ByProv = new Map();
+    geojson.features.forEach(f => {
+      pm25ByProv.set(normalize(getName(f)), provincePm25(f) ?? 0);
+    });
+
+    const chartProvinces = entries
+      .map(([n, c]) => {
+        const key = normalize(n);
         return {
           key,
-          name: title(getName(f)),
-          hotspots: counts.get(key) ?? 0,
-          pm25: provincePm25(f) ?? 0
+          name: title(n),
+          shortName: ABBR[key] || title(n),
+          hotspots: c,
+          pm25: pm25ByProv.get(key) ?? 0
         };
       })
-      .sort((a, b) => (b.hotspots - a.hotspots) || a.name.localeCompare(b.name, "id"));
+      .sort((a, b) => a.name.localeCompare(b.name, "id"));
 
-    const colWidth = 86;
-    const svgWidth = chartProvinces.length * colWidth;
-    const svgHeight = 176;
+    const statsView = el("div", "map-stats-view");
+    statsView.hidden = true;
+
+    const statsHeader = el("div", "stats-header");
+    const statsTitleGroup = el("div", "stats-title-group");
+    const statsTitle = el("h3", "stats-title", "Statistik Karhutla & Kesehatan Udara");
+    const statsDesc = el("p", "stats-desc", "Jumlah titik panas (kiri) dan rata-rata PM2.5 (kanan) berdasarkan provinsi");
+    statsTitleGroup.append(statsTitle, statsDesc);
+
+    const statsLegend = el("div", "stats-legend");
+    const legHot = el("span", "stats-legend-item is-hot");
+    legHot.append(el("i"), "Titik panas");
+    const legAir = el("span", "stats-legend-item is-air");
+    legAir.append(el("i"), "Kesehatan udara (PM2.5)");
+    statsLegend.append(legHot, legAir);
+
+    statsHeader.append(statsTitleGroup, statsLegend);
+
     const maxHotspots = Math.max(...chartProvinces.map(d => d.hotspots), 1);
-    const maxPm25 = Math.max(...chartProvinces.map(d => d.pm25), 1);
+    const yMaxHot = Math.ceil(maxHotspots / 20000) * 20000;
+    const yTicksHot = [0, yMaxHot * 0.25, yMaxHot * 0.5, yMaxHot * 0.75, yMaxHot];
 
-    const statsPanel = el("div", "map-stats-panel");
-    statsPanel.hidden = true;
-    statsPanel.setAttribute("role", "region");
-    statsPanel.setAttribute("aria-label", "Diagram statistik garis seluruh provinsi untuk titik panas dan kualitas udara");
+    const maxAir = Math.max(...chartProvinces.map(d => d.pm25), 1);
+    const stepAir = maxAir > 100 ? 50 : 25;
+    const yMaxAir = Math.max(stepAir * 4, Math.ceil(maxAir / stepAir) * stepAir);
+    const yTicksAir = [0, yMaxAir * 0.25, yMaxAir * 0.5, yMaxAir * 0.75, yMaxAir];
 
-    const chartHeader = el("div", "vchart-header");
-    const chartTitle = el("h3", "vchart-title", `Diagram Statistik ${chartProvinces.length} Provinsi (Karhutla & Kualitas Udara)`);
-    const chartMeta = el("div", "vchart-meta");
-    const metaHot = el("span", "vchart-key is-black"), metaAir = el("span", "vchart-key is-blue");
-    metaHot.append(el("i"), "Titik panas (Karhutla)");
-    metaAir.append(el("i"), "Indeks udara PM2.5 (µg/m³)");
-    chartMeta.append(metaHot, metaAir);
-
-    const chartControls = el("div", "vchart-controls");
-    const prevBtn = el("button", "vchart-btn", "◀ Geser Kiri");
-    prevBtn.type = "button";
-    prevBtn.setAttribute("aria-label", "Geser diagram ke kiri");
-    const nextBtn = el("button", "vchart-btn", "Geser Kanan ▶");
-    nextBtn.type = "button";
-    nextBtn.setAttribute("aria-label", "Geser diagram ke kanan");
-    const chartHint = el("span", "vchart-hint", "Geser diagram, gunakan scroll mouse, atau tombol geser di samping");
-    chartControls.append(prevBtn, chartHint, nextBtn);
-    chartHeader.append(chartTitle, chartMeta, chartControls);
-
-    const chartScroll = el("div", "vchart-scroll");
-    chartScroll.setAttribute("tabindex", "0");
-    chartScroll.setAttribute("role", "region");
-    chartScroll.setAttribute("aria-label", "Grafik statistik seluruh provinsi dapat digeser secara horizontal");
-    const chartWrap = el("div", "vchart");
-    chartWrap.style.width = `${svgWidth}px`;
-
-    const valsRow = el("div", "vchart-row"), namesRow = el("div", "vchart-row");
-    valsRow.style.gridTemplateColumns = `repeat(${chartProvinces.length}, ${colWidth}px)`;
-    namesRow.style.gridTemplateColumns = `repeat(${chartProvinces.length}, ${colWidth}px)`;
+    const svgWidth = 1000;
+    const svgHeight = 420;
+    const padLeft = 65;
+    const padRight = 55;
+    const padTop = 25;
+    const padBottom = 65;
+    const chartW = svgWidth - padLeft - padRight;
+    const chartH = svgHeight - padTop - padBottom;
 
     const svgEl = (tag, attrs) => {
       const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
       Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, String(v)));
       return n;
     };
-    const svg = svgEl("svg", { viewBox: `0 0 ${svgWidth} ${svgHeight}`, class: "vchart-svg", "aria-hidden": "true" });
-    const hotPts = [], airPts = [];
+
+    const chartWrap = el("div", "stats-chart-wrap");
+    const svg = svgEl("svg", { viewBox: `0 0 ${svgWidth} ${svgHeight}`, class: "stats-svg", "aria-hidden": "true" });
+    const tooltip = el("div", "stats-tooltip");
+    tooltip.hidden = true;
+
+    yTicksHot.forEach((tHot, i) => {
+      const y = Math.round(padTop + chartH - (tHot / yMaxHot) * chartH);
+      const tAir = yTicksAir[i];
+      svg.append(
+        svgEl("line", { x1: padLeft, y1: y, x2: padLeft + chartW, y2: y, class: "stats-grid-line" }),
+        Object.assign(svgEl("text", { x: padLeft - 10, y: y + 4, class: "stats-y-label-left" }), { textContent: fmt(tHot) }),
+        Object.assign(svgEl("text", { x: padLeft + chartW + 10, y: y + 4, class: "stats-y-label-right" }), { textContent: fmt(tAir) })
+      );
+    });
+
+    svg.append(
+      svgEl("line", { x1: padLeft, y1: padTop, x2: padLeft, y2: padTop + chartH, class: "stats-axis-line" }),
+      svgEl("line", { x1: padLeft + chartW, y1: padTop, x2: padLeft + chartW, y2: padTop + chartH, class: "stats-axis-line" }),
+      svgEl("line", { x1: padLeft, y1: padTop + chartH, x2: padLeft + chartW, y2: padTop + chartH, class: "stats-axis-line" })
+    );
+
+    const stepX = chartW / (chartProvinces.length - 1);
+    const ptsHot = [];
+    const ptsAir = [];
+
+    const guideLine = svgEl("line", { x1: 0, y1: padTop, x2: 0, y2: padTop + chartH, class: "stats-guide-line" });
+    guideLine.style.display = "none";
+    svg.append(guideLine);
+
+    const dotsHot = [];
+    const dotsAir = [];
+    const xLabels = [];
 
     chartProvinces.forEach((item, idx) => {
-      const x = Math.round(colWidth / 2 + idx * colWidth);
-      const yHot = Math.round(154 - (item.hotspots / maxHotspots) * 132);
-      const yAir = Math.round(156 - (item.pm25 / (maxPm25 * 1.12)) * 128);
-      hotPts.push([x, yHot]);
-      airPts.push([x, yAir]);
-      svg.append(svgEl("line", { x1: x, y1: 12, x2: x, y2: 164, class: "vchart-pillar" }));
-      const vals = el("div", "vchart-vals");
-      vals.append(el("span", "vval-black", fmt(item.hotspots)), el("span", "vval-blue", item.pm25.toFixed(1).replace(".", ",")));
-      valsRow.append(vals);
-      namesRow.append(el("span", "vchart-name", item.name));
+      const x = Math.round(padLeft + idx * stepX);
+      const yHot = Math.round(padTop + chartH - (item.hotspots / yMaxHot) * chartH);
+      const yAir = Math.round(padTop + chartH - (item.pm25 / yMaxAir) * chartH);
+      ptsHot.push([x, yHot]);
+      ptsAir.push([x, yAir]);
+
+      svg.append(svgEl("line", { x1: x, y1: padTop + chartH, x2: x, y2: padTop + chartH + 5, class: "stats-tick" }));
+
+      const lbl = svgEl("text", {
+        x: x,
+        y: padTop + chartH + 16,
+        transform: `rotate(-45, ${x}, ${padTop + chartH + 16})`,
+        class: "stats-x-label"
+      });
+      lbl.textContent = item.shortName;
+      xLabels.push(lbl);
+      svg.append(lbl);
     });
 
-    const hotStr = hotPts.map(p => p.join(",")).join(" "), airStr = airPts.map(p => p.join(",")).join(" ");
+    const polyHot = ptsHot.map(p => p.join(",")).join(" ");
+    const polyAir = ptsAir.map(p => p.join(",")).join(" ");
+
     svg.append(
-      svgEl("polyline", { points: hotStr, class: "vchart-line vchart-line-black-halo" }),
-      svgEl("polyline", { points: hotStr, class: "vchart-line vchart-line-black" }),
-      svgEl("polyline", { points: airStr, class: "vchart-line vchart-line-blue" })
+      svgEl("polyline", { points: polyAir, class: "stats-line-air-halo" }),
+      svgEl("polyline", { points: polyAir, class: "stats-line-air" }),
+      svgEl("polyline", { points: polyHot, class: "stats-line-hot" })
     );
-    hotPts.forEach(([cx, cy]) => svg.append(svgEl("circle", { cx, cy, r: 4, class: "vchart-dot vchart-dot-black" })));
-    airPts.forEach(([cx, cy]) => svg.append(svgEl("circle", { cx, cy, r: 4, class: "vchart-dot vchart-dot-blue" })));
-    chartWrap.append(valsRow, svg, namesRow);
-    chartScroll.append(chartWrap);
-    statsPanel.append(chartHeader, chartScroll);
 
-    prevBtn.addEventListener("click", () => chartScroll.scrollBy({ left: -340, behavior: "smooth" }));
-    nextBtn.addEventListener("click", () => chartScroll.scrollBy({ left: 340, behavior: "smooth" }));
-
-    chartScroll.addEventListener("wheel", e => {
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      if (delta !== 0) {
-        chartScroll.scrollLeft += delta;
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }, { passive: false });
-
-    let isPointerDown = false;
-    let startX = 0;
-    let scrollStart = 0;
-
-    chartScroll.addEventListener("mousedown", e => {
-      if (e.button !== 0) return;
-      isPointerDown = true;
-      startX = e.pageX;
-      scrollStart = chartScroll.scrollLeft;
-      chartScroll.classList.add("is-dragging");
+    ptsAir.forEach(([x, y]) => {
+      const dot = svgEl("circle", { cx: x, cy: y, r: 3.5, class: "stats-dot-air" });
+      dotsAir.push(dot);
+      svg.append(dot);
     });
 
-    window.addEventListener("mousemove", e => {
-      if (!isPointerDown) return;
-      e.preventDefault();
-      const walk = (e.pageX - startX) * 1.5;
-      chartScroll.scrollLeft = scrollStart - walk;
+    ptsHot.forEach(([x, y]) => {
+      const dot = svgEl("circle", { cx: x, cy: y, r: 3.5, class: "stats-dot-hot" });
+      dotsHot.push(dot);
+      svg.append(dot);
     });
 
-    window.addEventListener("mouseup", () => {
-      if (isPointerDown) {
-        isPointerDown = false;
-        chartScroll.classList.remove("is-dragging");
-      }
+    const selectPoint = idx => {
+      dotsHot.forEach((d, i) => d.classList.toggle("is-active", i === idx));
+      dotsAir.forEach((d, i) => d.classList.toggle("is-active", i === idx));
+      xLabels.forEach((l, i) => l.classList.toggle("is-active", i === idx));
+      const item = chartProvinces[idx];
+      const [x] = ptsHot[idx];
+
+      guideLine.setAttribute("x1", x);
+      guideLine.setAttribute("x2", x);
+      guideLine.style.display = "block";
+
+      tooltip.innerHTML = `<span class="stats-tooltip-name">${item.name}</span><span class="stats-tooltip-hot">${fmt(item.hotspots)} titik panas</span><span class="stats-tooltip-air">${item.pm25.toFixed(1).replace(".", ",")} µg/m³ PM2.5</span>`;
+      tooltip.hidden = false;
+
+      const r = chartWrap.getBoundingClientRect();
+      const tw = tooltip.offsetWidth || 150;
+      const th = tooltip.offsetHeight || 56;
+      let left = (x / svgWidth) * r.width - tw / 2;
+      let top = Math.min((ptsHot[idx][1] / svgHeight) * r.height, (ptsAir[idx][1] / svgHeight) * r.height) - th - 12;
+      if (left < 6) left = 6;
+      if (left + tw > r.width - 6) left = r.width - tw - 6;
+      if (top < 6) top = Math.max((ptsHot[idx][1] / svgHeight) * r.height, (ptsAir[idx][1] / svgHeight) * r.height) + 12;
+      tooltip.style.left = `${Math.round(left)}px`;
+      tooltip.style.top = `${Math.round(top)}px`;
+    };
+
+    chartProvinces.forEach((item, idx) => {
+      const [x] = ptsHot[idx];
+      const hitW = Math.round(stepX);
+      const hitX = Math.round(x - hitW / 2);
+      const hit = svgEl("rect", {
+        x: hitX,
+        y: padTop,
+        width: hitW,
+        height: chartH,
+        fill: "transparent",
+        class: "stats-hit-area"
+      });
+      hit.addEventListener("mouseenter", () => selectPoint(idx));
+      hit.addEventListener("click", () => selectPoint(idx));
+      hit.addEventListener("touchstart", e => { selectPoint(idx); e.stopPropagation(); }, { passive: true });
+      dotsHot[idx].addEventListener("mouseenter", () => selectPoint(idx));
+      dotsHot[idx].addEventListener("click", () => selectPoint(idx));
+      dotsAir[idx].addEventListener("mouseenter", () => selectPoint(idx));
+      dotsAir[idx].addEventListener("click", () => selectPoint(idx));
+      xLabels[idx].addEventListener("mouseenter", () => selectPoint(idx));
+      xLabels[idx].addEventListener("click", () => selectPoint(idx));
+      svg.append(hit);
     });
 
-    chartScroll.addEventListener("keydown", e => {
-      if (e.key === "ArrowLeft") {
-        chartScroll.scrollBy({ left: -180, behavior: "smooth" });
-        e.preventDefault();
-      } else if (e.key === "ArrowRight") {
-        chartScroll.scrollBy({ left: 180, behavior: "smooth" });
-        e.preventDefault();
-      }
-    });
-
-    statsPanel.addEventListener("mousedown", e => e.stopPropagation());
-    statsPanel.addEventListener("touchstart", e => e.stopPropagation(), { passive: true });
-    mapEl.append(statsPanel);
+    chartWrap.append(svg, tooltip);
+    statsView.append(statsHeader, chartWrap);
+    layout.append(statsView);
 
     let activeMode = "hotspots", selected = null;
     const popupContent = (info, feature) => {
@@ -405,8 +478,20 @@
         return [...last.rgb, last.alpha];
       };
 
+      const marginX = scale * 3.5;
+      const marginY = scale * 3.5;
+
       for (let y = 0; y < raw.height; y++) {
+        const distY = Math.min(y, raw.height - 1 - y);
+        const factorY = smooth(Math.min(1, distY / marginY));
+        if (factorY === 0) continue;
+
         for (let x = 0; x < raw.width; x++) {
+          const distX = Math.min(x, raw.width - 1 - x);
+          const factorX = smooth(Math.min(1, distX / marginX));
+          const edgeFactor = factorX * factorY;
+          if (edgeFactor <= 0.001) continue;
+
           const val = sample((1 - y / (raw.height - 1)) * (airLats.length - 1), x / (raw.width - 1) * (airLons.length - 1));
           const rgba = val === null ? null : colorFor(val);
           if (!rgba) continue;
@@ -414,7 +499,7 @@
           image.data[idx] = rgba[0];
           image.data[idx + 1] = rgba[1];
           image.data[idx + 2] = rgba[2];
-          image.data[idx + 3] = Math.round(255 * rgba[3]);
+          image.data[idx + 3] = Math.round(255 * rgba[3] * edgeFactor);
         }
       }
       rawCtx.putImageData(image, 0, 0);
@@ -454,6 +539,7 @@
     let baseZoom = 0, resizeTimer;
     const syncDrag = () => { if (coarsePointer) map.dragging[map.getZoom() > baseZoom + 0.05 ? "enable" : "disable"](); };
     const fit = () => {
+      if (!mapEl || mapEl.clientWidth === 0 || mapEl.clientHeight === 0) return;
       map.invalidateSize({ animate: false });
       map.fitBounds(provinces.getBounds(), { padding: [8, 8], animate: false });
       baseZoom = map.getZoom();
@@ -463,8 +549,12 @@
     map.on("zoomend", syncDrag);
 
     const onResize = () => {
+      if (!mapEl || mapEl.clientWidth === 0 || mapEl.clientHeight === 0) return;
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => Math.abs(map.getZoom() - baseZoom) < 0.05 ? fit() : map.invalidateSize({ animate: false }), 150);
+      resizeTimer = setTimeout(() => {
+        if (!mapEl || mapEl.clientWidth === 0 || mapEl.clientHeight === 0) return;
+        Math.abs(map.getZoom() - baseZoom) < 0.05 ? fit() : map.invalidateSize({ animate: false });
+      }, 150);
     };
     if ("ResizeObserver" in window) new ResizeObserver(onResize).observe(mapEl);
     else addEventListener("resize", onResize);
@@ -506,43 +596,48 @@
     };
     legend.addTo(map);
 
-    const modeControl = L.control({ position: "topright" });
-    modeControl.onAdd = () => {
-      const box = L.DomUtil.create("div", "map-mode-control leaflet-bar");
-      const hotBtn = el("button", "map-mode-button is-active", "Karhutla");
-      const airBtn = el("button", "map-mode-button", "Kualitas udara");
-      const statBtn = el("button", "map-mode-button", "Statistik");
-      hotBtn.type = airBtn.type = statBtn.type = "button";
-      hotBtn.setAttribute("aria-pressed", "true");
-      airBtn.setAttribute("aria-pressed", "false");
-      statBtn.setAttribute("aria-pressed", "false");
-      const setMode = mode => {
-        const isStats = mode === "stats";
-        if (!isStats) activeMode = mode;
-        hotBtn.classList.toggle("is-active", mode === "hotspots");
-        airBtn.classList.toggle("is-active", mode === "air");
-        statBtn.classList.toggle("is-active", isStats);
-        hotBtn.setAttribute("aria-pressed", String(mode === "hotspots"));
-        airBtn.setAttribute("aria-pressed", String(mode === "air"));
-        statBtn.setAttribute("aria-pressed", String(isStats));
-        statsPanel.hidden = !isStats;
-        if (!isStats) {
-          if (airOverlay) mode === "air" ? airOverlay.addTo(map) : map.removeLayer(airOverlay);
-          provinces.eachLayer(l => provinces.resetStyle(l));
-          renderLegend(mode);
-          if (map._popup && selected) selected.openPopup(selected.getBounds().getCenter());
-        } else {
-          map.closePopup();
-        }
-      };
-      hotBtn.addEventListener("click", () => setMode("hotspots"));
-      airBtn.addEventListener("click", () => setMode("air"));
-      statBtn.addEventListener("click", () => setMode("stats"));
-      box.append(hotBtn, airBtn, statBtn);
-      L.DomEvent.disableClickPropagation(box);
-      return box;
+    const modeBar = el("div", "map-mode-bar");
+    const hotBtn = el("button", "map-mode-btn is-active", "Karhutla");
+    const airBtn = el("button", "map-mode-btn", "Kualitas udara");
+    const statBtn = el("button", "map-mode-btn", "Statistik");
+    hotBtn.type = airBtn.type = statBtn.type = "button";
+    hotBtn.setAttribute("aria-pressed", "true");
+    airBtn.setAttribute("aria-pressed", "false");
+    statBtn.setAttribute("aria-pressed", "false");
+    modeBar.append(hotBtn, airBtn, statBtn);
+    layout.append(modeBar);
+
+    const setMode = mode => {
+      const isStats = mode === "stats";
+      if (!isStats) activeMode = mode;
+      hotBtn.classList.toggle("is-active", mode === "hotspots");
+      airBtn.classList.toggle("is-active", mode === "air");
+      statBtn.classList.toggle("is-active", isStats);
+      hotBtn.setAttribute("aria-pressed", String(mode === "hotspots"));
+      airBtn.setAttribute("aria-pressed", String(mode === "air"));
+      statBtn.setAttribute("aria-pressed", String(isStats));
+
+      if (isStats) {
+        map.closePopup();
+        statsView.hidden = false;
+        mapEl.style.visibility = "hidden";
+        mapEl.setAttribute("aria-hidden", "true");
+      } else {
+        statsView.hidden = true;
+        mapEl.style.visibility = "";
+        mapEl.removeAttribute("aria-hidden");
+        if (airOverlay) mode === "air" ? airOverlay.addTo(map) : map.removeLayer(airOverlay);
+        provinces.eachLayer(l => provinces.resetStyle(l));
+        renderLegend(mode);
+        map.invalidateSize({ animate: false });
+        fit();
+        if (map._popup && selected) selected.openPopup(selected.getBounds().getCenter());
+      }
     };
-    modeControl.addTo(map);
+    hotBtn.addEventListener("click", () => setMode("hotspots"));
+    airBtn.addEventListener("click", () => setMode("air"));
+    statBtn.addEventListener("click", () => setMode("stats"));
+
     loading.remove();
   }
 })();
