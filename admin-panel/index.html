@@ -12,7 +12,7 @@
       } catch (_) { document.documentElement.dataset.theme = "light"; }
     })();
   </script>
-  <title>Panel Moderasi Laporan | Tim sEm4nGa7 k0Mp4k AnT1 mLeS</title>
+  <title>Panel Laporan Masyarakat | Tim sEm4nGa7 k0Mp4k AnT1 mLeS</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23080c14' stroke='%231e3a8a' stroke-width='1.2'/%3E%3Cpath d='M16 3.5C18.8 6.8 19.8 9.2 18.2 11.8 19.4 10.8 20.2 11.8 19.2 13.5 17.8 15.2 14.2 15.2 12.8 13.5 11.8 11.8 12.6 10.8 13.8 11.8 12.2 9.2 13.2 6.8 16 3.5Z' fill='%2338bdf8'/%3E%3Cpath d='M16 6.8C17.3 8.8 17.6 10.4 16 12.6 14.4 10.4 14.7 8.8 16 6.8Z' fill='%23ffffff'/%3E%3Cpath d='M8.5 24.5 14.3 13.5 16 14.8 17.7 13.5 23.5 24.5Z' fill='%231e40af' fill-opacity='0.45'/%3E%3Cpath d='M8.5 24.5 14.3 13.5 16 14.8 17.7 13.5 23.5 24.5' fill='none' stroke='%2338bdf8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M13.2 15.6 14.3 13.5 16 14.8 17.7 13.5 18.8 15.6' fill='none' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M2.2 19.5C3.8 17.5 5.7 21.5 7.5 19.5M24.5 19.5C26.3 17.5 28.2 21.5 29.8 19.5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M3.2 23C5 21.2 6.8 24.8 8.8 23M10.5 21.5C13.2 19.5 18.8 23.5 21.5 21.5M23.2 23C25.2 21.2 27 24.8 28.8 23' fill='none' stroke='%2338bdf8' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="../main/style/theme.css?v=23">
   <link rel="stylesheet" href="../laporan/style/style.css?v=23">
@@ -43,34 +43,6 @@
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
-    }
-    .admin-login-dialog {
-      width: min(440px, calc(100% - 28px));
-      max-height: min(90vh, 680px);
-      padding: 22px;
-      border: 1.5px solid var(--line-strong);
-      background: var(--surface);
-      color: var(--text);
-    }
-    .admin-login-dialog::backdrop {
-      background: rgb(0 0 0 / 55%);
-    }
-    .admin-login-dialog h2 {
-      margin: 0 0 8px;
-      font-family: var(--font-title);
-      font-size: 21px;
-    }
-    .admin-login-dialog p {
-      margin: 0 0 16px;
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    .admin-login-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 14px;
     }
     .admin-filters-grid {
       margin-top: 20px;
@@ -122,35 +94,6 @@
     .admin-table tr:last-child td {
       border-bottom: 0;
     }
-    .admin-actions-cell {
-      display: flex;
-      gap: 7px;
-      flex-wrap: wrap;
-    }
-    .btn-mod-approve,
-    .btn-mod-reject {
-      min-height: 32px;
-      padding: 0 10px;
-      border: 1px solid var(--line-strong);
-      border-radius: 999px;
-      font: 700 12px var(--font-body);
-      cursor: pointer;
-      transition: background-color var(--fast) var(--ease), transform var(--fast) var(--ease);
-    }
-    .btn-mod-approve {
-      background: var(--st-1);
-      color: #fff;
-    }
-    .btn-mod-reject {
-      background: var(--surface);
-      color: var(--st-4);
-    }
-    .btn-mod-approve:hover:not(:disabled),
-    .btn-mod-reject:hover:not(:disabled) { background: var(--control-hover); color: var(--text); }
-    .btn-mod-approve:active:not(:disabled),
-    .btn-mod-reject:active:not(:disabled) { transform: scale(.97); }
-    .btn-mod-approve:disabled,
-    .btn-mod-reject:disabled { cursor: wait; opacity: .65; }
     .mod-pill {
       display: inline-flex;
       align-items: center;
@@ -166,9 +109,6 @@
     }
     .mod-pill.is-valid {
       color: var(--accent);
-    }
-    .mod-pill.is-rejected {
-      color: var(--st-4);
     }
     @media (max-width: 900px) {
       .admin-filters-grid {
@@ -195,18 +135,15 @@
       <header class="report-hero">
         <div class="report-hero-main">
           <h1>Ringkasan Laporan Masyarakat</h1>
-          <p class="report-hero-desc">Laporan dapat dilihat publik tanpa identitas pelapor. Admin yang login dapat memverifikasi atau menolak laporan.</p>
+          <p class="report-hero-desc">Daftar laporan publik yang valid atau telah disetujui. Panel ini hanya menampilkan data dan tidak menyediakan moderasi.</p>
         </div>
         <div class="report-hero-action admin-access-controls">
-          <span id="admin-moderator-label" class="badge-pill">Mode baca saja</span>
-          <button type="button" id="btn-admin-login-open" class="btn-outline-sm">Login Admin</button>
-          <button type="button" id="btn-admin-logout" class="btn-outline-sm" hidden>Keluar</button>
           <button type="button" id="btn-admin-refresh" class="btn-outline-sm">Muat Ulang</button>
         </div>
       </header>
       <p id="admin-last-updated" class="report-hero-desc" aria-live="polite">Belum diperbarui</p>
 
-      <div id="admin-login-error" class="form-error-box" role="status" hidden></div>
+      <div id="admin-data-message" class="form-error-box" role="status" hidden></div>
       <div class="admin-filters-grid" aria-label="Filter laporan masyarakat">
         <div class="admin-filter-item">
           <label for="admin-filter-category">Kategori</label>
@@ -234,7 +171,6 @@
             <option value="all">Semua Status</option>
             <option value="valid">Belum disetujui</option>
             <option value="approved">Disetujui Moderator</option>
-            <option value="rejected" hidden>Ditolak</option>
           </select>
         </div>
       </div>
@@ -249,7 +185,6 @@
               <th>Ringkasan Publik</th>
               <th>Kelompok</th>
               <th>Status Moderasi</th>
-              <th data-admin-only hidden>Aksi</th>
             </tr>
           </thead>
           <tbody id="admin-reports-tbody">
@@ -262,33 +197,13 @@
     </section>
   </main>
 
-  <dialog id="admin-login-dialog" class="admin-login-dialog" aria-labelledby="admin-login-title">
-    <h2 id="admin-login-title">Login Admin</h2>
-    <p>Gunakan kredensial admin yang disimpan sebagai Environment Variables di Vercel.</p>
-    <form id="admin-login-form" class="report-form" novalidate>
-      <div id="admin-login-dialog-error" class="form-error-box" role="alert" hidden></div>
-      <div class="form-field">
-        <label for="admin-email">Email Admin</label>
-        <input type="email" id="admin-email" class="form-input" required autocomplete="username">
-      </div>
-      <div class="form-field">
-        <label for="admin-password">Kata Sandi</label>
-        <input type="password" id="admin-password" class="form-input" required autocomplete="current-password">
-      </div>
-      <div class="admin-login-actions">
-        <button type="button" id="btn-admin-login-cancel" class="btn-outline-sm">Batal</button>
-        <button type="submit" id="btn-admin-login" class="btn-primary">Masuk</button>
-      </div>
-    </form>
-  </dialog>
-
   <footer>
     <span>Tim sEm4nGa7 k0Mp4k AnT1 mLeS - SMK Telkom Sidoarjo</span>
-    <p>Panel Moderasi Laporan Masyarakat</p>
+    <p>Panel Laporan Publik</p>
   </footer>
 
   <script src="../main/features/theme-toggle.js?v=23"></script>
   <script src="../site-config.js?v=1"></script>
-  <script src="/admin-panel/demo.js?v=5"></script>
+  <script src="/admin-panel/demo.js?v=6"></script>
 </body>
 </html>
