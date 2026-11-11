@@ -44,10 +44,69 @@ Pertama clone repository ini dari GitHub lalu masuk ke foldernya:
 git clone <url-repository>
 cd <nama-folder>
 
-Setelah itu jalankan server lokal dengan perintah berikut di terminal:
-python -m http.server 5500 --bind 127.0.0.1
+Untuk melihat halaman di VS Code, buka `index.html`, klik kanan lalu pilih **Open with Live Server** (atau tekan **Go Live**). Live Server akan memilih alamatnya sendiri; tidak perlu mengisi domain, IP, atau port. `index.html` memakai rute relatif untuk membuka beranda di `main/`.
 
-Lalu buka alamat http://127.0.0.1:5500/ di browser.
+Live Server menyajikan halaman frontend. Daftar laporan menggunakan snapshot baca-saja jika Supabase belum dikonfigurasi. Pengiriman laporan dan panel moderator memerlukan Supabase yang dikonfigurasi di `site-config.js`; Live Server bukan backend API. Jangan membuka berkas HTML dengan klik dua kali (`file://`).
+
+## Alamat Halaman
+
+Folder proyek harus diunggah bersama struktur foldernya. Halaman yang tersedia:
+
+- `/` atau `/main/` — beranda.
+- `/gunung-berapi/` — peta dan informasi gunung berapi.
+- `/karhutla/` — peta karhutla dan kualitas udara.
+- `/laporan/` — formulir dan daftar laporan masyarakat.
+- `/admin-panel/` — login moderator dan moderasi laporan.
+
+Nama folder dan berkas menggunakan huruf kecil serta tanda hubung. Jangan mengganti nama folder tanpa memperbarui tautan relatif di halaman. Hosting harus menyajikan `index.html` dalam folder; jika URL hosting memakai subfolder, unggah seluruh isi repositori sebagai satu kesatuan.
+
+## Deploy Online (Hosting Statis + Supabase)
+
+Untuk situs online, gunakan alamat bawaan hosting (domain kustom opsional), dan siapkan Supabase untuk laporan serta moderasi:
+
+1. Buat proyek Supabase dan salin **Project URL** serta **anon/public key**. Isi kedua nilai itu di `site-config.js`:
+
+   ```js
+   window.ENV_SUPABASE_URL = "https://PROJECT_REF.supabase.co";
+   window.ENV_SUPABASE_ANON_KEY = "ANON_PUBLIC_KEY";
+   ```
+
+   URL dan anon key memang dipakai browser. Jangan pernah menaruh `service_role` key, kata sandi, atau NASA/OpenAQ key di berkas ini.
+
+2. Dari folder repositori, tautkan Supabase CLI ke proyek yang benar lalu jalankan migrasi SQL:
+
+   ```text
+   supabase login
+   supabase link --project-ref PROJECT_REF
+   supabase db push
+   ```
+
+   Migrasi menyiapkan tabel, kebijakan akses, dan fungsi laporan. Terapkan migrasi `20261110000000`, `20261110010000`, `20261111000000`, dan `20261112000000` secara berurutan; migrasi terakhir menghapus alur serta kolom tanggal dampak Karhutla.
+
+3. Deploy Edge Functions yang dipakai aplikasi:
+
+   ```text
+   supabase functions deploy community-reports
+   supabase functions deploy environment-summary
+   supabase functions deploy sync-nasa-firms
+   supabase functions deploy sync-openaq-pm25
+   ```
+
+   `community-reports` harus mengizinkan request publik sesuai `supabase/config.toml`; hak moderasi tetap diperiksa lewat akun Supabase Auth dan `moderator_profiles`.
+
+4. Buat akun moderator di Supabase Auth, lalu tambahkan profil moderator aktif yang menunjuk ke UUID akun tersebut. Jangan membuat akun moderator dengan membagikan service key atau menyimpan kata sandi di frontend.
+
+5. Untuk pembaruan data langsung, masukkan `NASA_FIRMS_MAP_KEY` dan `OPENAQ_API_KEY` sebagai **Edge Function secrets** di Supabase, lalu jadwalkan pemanggilan `sync-nasa-firms` dan `sync-openaq-pm25` (interval yang digunakan aplikasi adalah 60 menit). Kedua key ini tidak diperlukan agar halaman statis dan data peta bawaan dapat ditampilkan, tetapi diperlukan untuk pembaruan data terbaru dari sumbernya.
+
+6. Deploy seluruh isi folder proyek ke hosting statis dengan HTTPS. Uji URL kelima halaman di atas. Pastikan `site-config.js` ikut terunggah dan hanya berisi Project URL serta anon/public key.
+
+### Konfigurasi yang Tidak Boleh Dipublikasikan
+
+- `SUPABASE_SERVICE_ROLE_KEY`: simpan sebagai secret server/Edge Function saja; tidak boleh berada di `site-config.js`, HTML, atau JavaScript browser.
+- `NASA_FIRMS_MAP_KEY` dan `OPENAQ_API_KEY`: simpan sebagai Edge Function secrets (atau di `.env` untuk `sync_realtime.py` lokal).
+- Jangan unggah `.env`. Berkas itu diabaikan Git.
+
+Jika Supabase belum dikonfigurasi, halaman peta masih dapat menampilkan data JSON bawaan dan snapshot laporan masyarakat lokal. Setelah konfigurasi diisi, indikator laporan masyarakat pada peta dan data lingkungan terbaru dimuat dari Supabase; kirim laporan, login/moderasi online, dan pembaruan data dari Supabase memerlukan migrasi serta Edge Functions yang sudah aktif. Fitur laporan memakai database Supabase persisten; backend SQLite hanya lokal. Formulir Karhutla tidak menggunakan unggah foto atau tanggal mulai dampak.
 
 Penutup :
 Kami berharap website ini bisa membantu pengunjung memahami informasi mengenai lingkungan dan bencana di Indonesia dengan lebih mudah. Semoga informasi yang disajikan juga bisa menambah pengetahuan dan kepedulian kita terhadap lingkungan sekitar.

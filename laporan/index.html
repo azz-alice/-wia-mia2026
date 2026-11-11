@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    (() => {
+      try {
+        const savedTheme = localStorage.getItem("site-theme-v2") || sessionStorage.getItem("site-theme-session-v2");
+        document.documentElement.dataset.theme = (savedTheme === "light" || savedTheme === "dark") ? savedTheme : "light";
+      } catch (_) { document.documentElement.dataset.theme = "light"; }
+    })();
+  </script>
+  <title>Laporan Masyarakat | Tim sEm4nGa7 k0Mp4k AnT1 mLeS</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23080c14' stroke='%231e3a8a' stroke-width='1.2'/%3E%3Cpath d='M16 3.5C18.8 6.8 19.8 9.2 18.2 11.8 19.4 10.8 20.2 11.8 19.2 13.5 17.8 15.2 14.2 15.2 12.8 13.5 11.8 11.8 12.6 10.8 13.8 11.8 12.2 9.2 13.2 6.8 16 3.5Z' fill='%2338bdf8'/%3E%3Cpath d='M16 6.8C17.3 8.8 17.6 10.4 16 12.6 14.4 10.4 14.7 8.8 16 6.8Z' fill='%23ffffff'/%3E%3Cpath d='M8.5 24.5 14.3 13.5 16 14.8 17.7 13.5 23.5 24.5Z' fill='%231e40af' fill-opacity='0.45'/%3E%3Cpath d='M8.5 24.5 14.3 13.5 16 14.8 17.7 13.5 23.5 24.5' fill='none' stroke='%2338bdf8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M13.2 15.6 14.3 13.5 16 14.8 17.7 13.5 18.8 15.6' fill='none' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M2.2 19.5C3.8 17.5 5.7 21.5 7.5 19.5M24.5 19.5C26.3 17.5 28.2 21.5 29.8 19.5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M3.2 23C5 21.2 6.8 24.8 8.8 23M10.5 21.5C13.2 19.5 18.8 23.5 21.5 21.5M23.2 23C25.2 21.2 27 24.8 28.8 23' fill='none' stroke='%2338bdf8' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../main/style/theme.css?v=26">
+  <link rel="stylesheet" href="./style/style.css?v=27">
+</head>
+<body>
+  <nav class="site-nav" aria-label="Navigasi utama">
+    <div class="site-nav-inner">
+      <div class="site-nav-links">
+        <a class="site-nav-link" href="../main/">Beranda</a>
+        <a class="site-nav-link" href="../gunung-berapi/">Gunung Berapi</a>
+        <a class="site-nav-link" href="../karhutla/">Karhutla</a>
+        <a class="site-nav-link is-active" href="./" aria-current="page">Laporan</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="laporan-main">
+    <div id="community-alert-banner" class="community-alert-banner" role="status" hidden>
+      <div class="community-alert-text">
+        <strong>Data Tambahan Masyarakat Baru</strong>
+        <span id="community-alert-msg"></span>
+      </div>
+      <button type="button" id="community-alert-close" class="btn-outline-sm" aria-label="Tutup pemberitahuan">Tutup</button>
+    </div>
+
+    <header class="laporan-header">
+      <div class="header-main">
+        <h1>Laporan Masyarakat</h1>
+        <p class="header-desc">Pantau dan sampaikan laporan mengenai kondisi kebakaran hutan dan lahan serta persepsi kualitas udara di berbagai wilayah Indonesia.</p>
+      </div>
+      <span id="backend-connection-badge" class="connection-badge" role="status" hidden></span>
+    </header>
+
+    <section class="laporan-toolbar" aria-label="Pencarian dan pembuatan laporan">
+      <form id="report-search-form" class="search-form" novalidate>
+        <label for="search-code-input" class="sr-only">Kode unik laporan</label>
+        <input type="text" id="search-code-input" class="search-input" placeholder="Masukkan kode unik laporan (contoh: LAP-KH-...)" autocomplete="off" spellcheck="false">
+        <button type="submit" class="btn-secondary">Cari Kode</button>
+      </form>
+      <button type="button" id="open-report-modal-btn" class="btn-primary">+ Buat Laporan</button>
+    </section>
+    <div id="search-feedback" class="search-feedback" role="status" aria-live="polite" hidden></div>
+
+    <div class="laporan-tabs-bar">
+      <div class="category-tabs" role="tablist" aria-label="Kategori laporan">
+        <span class="category-tabs-indicator" aria-hidden="true"></span>
+        <button type="button" class="category-tab is-active" role="tab" aria-selected="true" data-category="karhutla">Karhutla <span class="tab-count" data-count-for="karhutla">0</span></button>
+        <button type="button" class="category-tab" role="tab" aria-selected="false" data-category="kualitas_udara">Kualitas Udara <span class="tab-count" data-count-for="kualitas_udara">0</span></button>
+      </div>
+    </div>
+
+    <section class="laporan-feed-section" aria-label="Daftar laporan masuk">
+      <div id="active-reports-container" class="reports-feed" role="tabpanel">
+        <div class="empty-state">Memuat daftar laporan masyarakat…</div>
+      </div>
+      <div id="pagination-bar" class="pagination-bar" hidden>
+        <button type="button" id="prev-page-btn" class="btn-outline-sm">Sebelumnya</button>
+        <span id="page-indicator" class="page-indicator">Halaman 1</span>
+        <button type="button" id="next-page-btn" class="btn-outline-sm">Berikutnya</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="report-form-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-form-title" hidden>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h2 id="modal-form-title">Buat Laporan Masyarakat</h2>
+          <p class="modal-subtitle">Pilih wilayah pengamatan dan sampaikan kondisi di lapangan</p>
+        </div>
+        <button type="button" id="close-form-modal-btn" class="modal-close-btn" aria-label="Tutup formulir">×</button>
+      </div>
+
+      <form id="community-report-form" class="modal-body report-form" novalidate>
+        <div class="form-field">
+          <label for="input-reporter-name" class="form-label">Nama Pelapor <span class="req">*</span></label>
+          <input type="text" id="input-reporter-name" name="reporter_name" class="form-input" placeholder="Masukkan nama atau nama panggilan" maxlength="80" required>
+          <small class="field-help">Nama akan ditampilkan pada daftar laporan publik.</small>
+        </div>
+
+        <div class="form-field">
+          <label for="input-province" class="form-label">Provinsi <span class="req">*</span></label>
+          <select id="input-province" name="province_pum_code" class="form-select" required>
+            <option value="">Pilih Provinsi</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="input-regency" class="form-label">Kabupaten/Kota <span class="req">*</span></label>
+          <select id="input-regency" name="regency_pum_code" class="form-select" disabled required>
+            <option value="">Pilih Kabupaten/Kota</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <span class="form-label">Jenis Laporan <span class="req">*</span></span>
+          <div class="category-choice-group">
+            <label class="category-radio-btn">
+              <input type="radio" name="report_category" value="karhutla" checked required>
+              <span>Karhutla</span>
+            </label>
+            <label class="category-radio-btn">
+              <input type="radio" name="report_category" value="kualitas_udara" required>
+              <span>Kualitas Udara</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="fields-karhutla" class="dynamic-fields">
+          <div class="form-field">
+            <label for="input-observed-at" class="form-label">Waktu Pengamatan <span class="req">*</span></label>
+            <input type="datetime-local" id="input-observed-at" class="form-input">
+            <small class="field-help">Waktu saat indikasi kebakaran hutan atau lahan diamati.</small>
+          </div>
+
+          <div class="form-field">
+            <label for="input-description" class="form-label">Deskripsi Kondisi <span class="req">*</span></label>
+            <textarea id="input-description" class="form-textarea" rows="4" maxlength="1000" placeholder="Jelaskan kondisi asap atau titik api yang terlihat, perkiraan lokasi sekitar, dan informasi tambahan."></textarea>
+          </div>
+
+        </div>
+
+        <div id="fields-kualitas-udara" class="dynamic-fields" hidden>
+          <div class="form-field">
+            <label for="input-air-decline" class="form-label">Persentase Penurunan Kualitas Udara yang Dirasakan <span class="req">*</span></label>
+            <select id="input-air-decline" class="form-select">
+              <option value="">Pilih Persentase (0% - 100%)</option>
+              <option value="0">0%</option>
+              <option value="10">10%</option>
+              <option value="20">20%</option>
+              <option value="30">30%</option>
+              <option value="40">40%</option>
+              <option value="50">50%</option>
+              <option value="60">60%</option>
+              <option value="70">70%</option>
+              <option value="80">80%</option>
+              <option value="90">90%</option>
+              <option value="100">100%</option>
+            </select>
+            <small class="field-help">Perkiraan penurunan kualitas udara dibandingkan hari biasa.</small>
+          </div>
+
+          <div class="form-field">
+            <label for="input-air-duration" class="form-label">Durasi Kondisi Tersebut <span class="req">*</span></label>
+            <select id="input-air-duration" class="form-select">
+              <option value="">Pilih Durasi (1–35 Hari)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="form-error-box" class="form-error-box" role="alert" hidden></div>
+
+        <div class="modal-footer">
+          <button type="button" id="cancel-form-btn" class="btn-ghost">Batal</button>
+          <button type="submit" id="submit-report-btn" class="btn-primary">Kirim Laporan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="report-success-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-success-title" hidden>
+    <div class="modal-dialog modal-dialog--compact">
+      <div class="modal-header">
+        <h2 id="modal-success-title">Laporan Berhasil Dikirim</h2>
+        <button type="button" id="close-success-modal-btn" class="modal-close-btn" aria-label="Tutup konfirmasi">×</button>
+      </div>
+
+      <div class="modal-body success-modal-body">
+        <p class="success-desc">Laporan Anda telah berhasil disimpan ke database. Simpan kode unik berikut untuk mencari atau melacak laporan Anda kembali:</p>
+
+        <div class="unique-code-box">
+          <span class="unique-code-label">Kode Unik Laporan</span>
+          <strong id="confirm-report-code" class="unique-code-value">-</strong>
+        </div>
+
+        <div class="success-actions">
+          <button type="button" id="copy-code-btn" class="btn-primary">Salin Kode</button>
+          <button type="button" id="find-my-report-btn" class="btn-secondary">Lihat pada Daftar</button>
+        </div>
+        <p id="copy-feedback" class="copy-feedback" role="status" aria-live="polite" hidden></p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Tim sEm4nGa7 k0Mp4k AnT1 mLeS - SMK Telkom Sidoarjo</span>
+    <p>Subtema Kesehatan dan Lingkungan</p>
+  </footer>
+
+  <script src="../main/features/theme-toggle.js?v=26"></script>
+  <script src="../site-config.js?v=1"></script>
+  <script src="./features/laporan.js?v=28"></script>
+</body>
+</html>

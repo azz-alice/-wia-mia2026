@@ -1,0 +1,27 @@
+project_id = "wia-mia-2026-environmental-data"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[realtime]
+enabled = true
+
+[functions.sync-nasa-firms]
+verify_jwt = true
+
+[functions.sync-openaq-pm25]
+verify_jwt = true
+
+[functions.environment-summary]
+verify_jwt = false
+
+[functions.community-reports]
+verify_jwt = false

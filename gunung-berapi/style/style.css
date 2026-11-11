@@ -22,13 +22,14 @@ section { margin-block: 0 40px; }
 .site-nav-inner { height: 44px; padding: 4px; border: 1.5px solid var(--line-strong); border-radius: 999px; background: var(--control-bg); display: inline-flex; align-items: center; }
 .site-nav-brand { display: none; }
 .site-nav-links { display: inline-flex; align-items: center; height: 100%; gap: 4px; }
-.site-nav-link { height: 33px; padding: 0 14px; border-radius: 999px; display: inline-flex; align-items: center; color: var(--text-soft); font-size: 13.5px; font-weight: 700; letter-spacing: .01em; text-decoration: none; }
+.site-nav-link { height: 33px; padding: 0 14px; border-radius: 999px; display: inline-flex; align-items: center; color: var(--text-soft); font-size: 13.5px; font-weight: 700; letter-spacing: .01em; text-decoration: none; transition: background-color var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), color var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), transform var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)); }
 .site-nav-link:hover { background: var(--control-hover); color: var(--text); }
+.site-nav-link:active { transform: scale(0.97); }
 .site-nav-link.is-active { background: var(--accent); color: var(--on-accent); }
 
 .hero { position: relative; width: min(var(--container), calc(100% - 32px)); margin: 76px auto 20px; padding: 4px 0 22px; border-bottom: 1px solid var(--line); }
 .hero-head { width: 100%; min-width: 0; display: flex; align-items: center; justify-content: center; }
-.hero-intro { width: auto; min-width: 0; padding-left: 18px; border-left: 3px solid var(--accent); display: inline-flex; align-items: center; justify-content: center; text-align: center; }
+.hero-intro { width: auto; min-width: 0; padding-left: 0; border-left: none; display: inline-flex; align-items: center; justify-content: center; text-align: center; }
 .hero h1 { margin: 0; font-size: clamp(24px, 3.4vw, 40px); font-weight: 700; letter-spacing: -.012em; white-space: nowrap; }
 
 .map-section { display: block; width: min(var(--container), calc(100% - 32px)); margin: 0 auto 48px; }
@@ -38,16 +39,18 @@ section { margin-block: 0 40px; }
 .map-status.is-loading { opacity: .88; color: var(--text-soft); pointer-events: none; }
 .map-status strong { font-size: 18px; }
 .map-status span { max-width: 46ch; color: var(--text-soft); }
-.map-status button { min-height: 44px; padding: 10px 22px; border: 1.5px solid var(--line-strong); border-radius: 999px; background: var(--accent); color: var(--on-accent); font: 700 14px var(--font-body); cursor: pointer; }
-.map-status button:hover { background: var(--accent-soft); }
+.map-status button { min-height: 44px; padding: 10px 22px; border: 1.5px solid var(--line-strong); border-radius: 999px; background: var(--accent); color: var(--on-accent); font: 700 14px var(--font-body); cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), transform var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)); }
+.map-status button:hover { background: var(--accent-soft); transform: translateY(-1px); }
+.map-status button:active { transform: translateY(0) scale(0.97); }
 
 .leaflet-interactive { cursor: pointer; outline: none; }
 path.leaflet-interactive:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .leaflet-bar { overflow: hidden; border: 1.5px solid var(--line-strong); border-radius: 14px; box-shadow: none; }
-.leaflet-bar a, .leaflet-bar a:hover, .map-reset-btn { background: var(--control-bg); color: var(--text); border-bottom: 1px solid var(--line); }
+.leaflet-bar a, .leaflet-bar a:hover, .map-reset-btn { background: var(--control-bg); color: var(--text); border-bottom: 1px solid var(--line); transition: background-color var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), color var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), transform var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)); }
 .leaflet-bar a:first-child { border-radius: 12px 12px 0 0; }
 .leaflet-bar a:last-child, .map-reset-btn:last-child { border-bottom: 0; border-radius: 0 0 12px 12px; }
-.leaflet-bar a:hover, .map-reset-btn:hover { background: var(--control-hover); }
+.leaflet-bar a:hover, .map-reset-btn:hover { background: var(--control-hover); color: var(--accent); }
+.leaflet-bar a:active, .map-reset-btn:active { transform: scale(0.95); }
 .leaflet-touch .leaflet-bar a { width: 40px; height: 40px; line-height: 40px; }
 .leaflet-bar a.leaflet-disabled { background: var(--control-bg); color: var(--muted); opacity: .5; }
 .map-reset-btn { display: block; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 12px; font-size: 18px; cursor: pointer; }
@@ -64,15 +67,17 @@ path.leaflet-interactive:focus-visible { outline: 2px solid var(--focus); outlin
 .leaflet-popup.is-below .leaflet-popup-tip-container { top: -20px; bottom: auto; transform: rotate(180deg); }
 
 .province-popup-wrap .leaflet-popup-content-wrapper,
-.volcano-popup-wrap .leaflet-popup-content-wrapper { border: 1.5px solid var(--line-strong); border-radius: 13px; background: var(--control-bg); color: var(--text); box-shadow: none; }
+.volcano-popup-wrap .leaflet-popup-content-wrapper { border: 1.5px solid var(--line-strong); border-radius: 13px; background: var(--control-bg); color: var(--text); box-shadow: none; animation: uiFadeSlideIn var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)); }
 .province-popup-wrap .leaflet-popup-tip,
 .volcano-popup-wrap .leaflet-popup-tip { background: var(--control-bg); color: var(--text); }
 .province-popup-wrap .leaflet-popup-content,
 .volcano-popup-wrap .leaflet-popup-content { margin: 11px 13px; font-size: 11.5px; line-height: 1.45; }
 .province-popup-wrap a.leaflet-popup-close-button,
-.volcano-popup-wrap a.leaflet-popup-close-button { width: 28px; height: 28px; padding: 0; color: var(--text-soft); font: 19px/28px var(--font-body); text-align: center; }
+.volcano-popup-wrap a.leaflet-popup-close-button { width: 28px; height: 28px; padding: 0; color: var(--text-soft); font: 19px/28px var(--font-body); text-align: center; transition: color var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), transform var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)); }
 .province-popup-wrap a.leaflet-popup-close-button:hover,
-.volcano-popup-wrap a.leaflet-popup-close-button:hover { color: var(--accent); background: transparent; }
+.volcano-popup-wrap a.leaflet-popup-close-button:hover { color: var(--accent); background: transparent; transform: scale(1.08); }
+.province-popup-wrap a.leaflet-popup-close-button:active,
+.volcano-popup-wrap a.leaflet-popup-close-button:active { transform: scale(0.94); }
 
 .province-popup .popup-title { margin: 0 18px 6px 0; font-size: 13.5px; font-weight: 700; line-height: 1.25; }
 .province-popup .popup-count { margin: 0; color: var(--text-soft); font-size: 10.5px; }
@@ -90,9 +95,10 @@ path.leaflet-interactive:focus-visible { outline: 2px solid var(--focus); outlin
 .volcano-popup-note { margin: 8px 0 0; padding-left: 8px; border-left: 2.5px solid var(--line-strong); color: var(--text-soft); font-size: 10px; }
 
 .map-legend { width: 212px; color: var(--text); font-size: 12px; }
-.map-legend > button { display: block; width: 100%; min-height: 40px; padding: 8px 14px; border: 1.5px solid var(--line-strong); border-radius: 999px; background: var(--control-bg); color: var(--text); text-align: left; font: 700 13px var(--font-body); cursor: pointer; }
-.map-legend > button:hover { background: var(--control-hover); }
-.map-legend-content { display: grid; gap: 9px; margin-top: 6px; padding: 12px 14px; border: 1.5px solid var(--line-strong); border-radius: 16px; background: var(--control-bg); }
+.map-legend > button { display: block; width: 100%; min-height: 40px; padding: 8px 14px; border: 1.5px solid var(--line-strong); border-radius: 999px; background: var(--control-bg); color: var(--text); text-align: left; font: 700 13px var(--font-body); cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), border-color var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), transform var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)); }
+.map-legend > button:hover { background: var(--control-hover); border-color: var(--accent); }
+.map-legend > button:active { transform: scale(0.98); }
+.map-legend-content { display: grid; gap: 9px; margin-top: 6px; padding: 12px 14px; border: 1.5px solid var(--line-strong); border-radius: 16px; background: var(--control-bg); animation: uiFadeSlideIn var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)); }
 .map-legend-content[hidden] { display: none; }
 .legend-item { display: grid; grid-template-columns: 18px minmax(0, 1fr); align-items: center; gap: 9px; }
 .legend-swatch { width: 18px; height: 18px; border: 1px solid var(--line-strong); border-radius: 50%; }
@@ -121,8 +127,9 @@ path.leaflet-interactive:focus-visible { outline: 2px solid var(--focus); outlin
 .editorial-article--reverse .article-content { grid-column: 1; grid-row: 1; }
 .editorial-article--reverse .article-heading h3 { margin-left: auto; }
 
-.theme-toggle { position: fixed; top: 14px; right: 16px; z-index: 3000; width: 44px; height: 44px; padding: 0; border: 1.5px solid var(--line-strong); border-radius: 13px; background: var(--control-bg); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.theme-toggle { position: fixed; top: 14px; right: 16px; z-index: 3000; width: 44px; height: 44px; padding: 0; border: 1.5px solid var(--line-strong); border-radius: 13px; background: var(--control-bg); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), color var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), border-color var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), transform var(--dur-fast, 150ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)); }
 .theme-toggle:hover { background: var(--control-hover); color: var(--text); }
+.theme-toggle:active { transform: scale(0.96); }
 
 @media (max-width: 900px) {
   .site-nav-brand { display: none; }
@@ -134,9 +141,10 @@ path.leaflet-interactive:focus-visible { outline: 2px solid var(--focus); outlin
   .article-content { max-width: 65ch; }
 }
 @media (max-width: 600px) {
-  .site-nav { top: 10px; left: 50%; transform: translateX(-50%); }
-  .site-nav-link { padding: 0 10px; font-size: 12.5px; }
-  .theme-toggle { top: 10px; right: 12px; }
+  .site-nav { top: 10px; left: 10px; transform: none; max-width: calc(100vw - 68px); }
+  .site-nav-inner { max-width: 100%; overflow-x: auto; }
+  .site-nav-link { padding: 0 10px; font-size: 12px; white-space: nowrap; }
+  .theme-toggle { top: 10px; right: 10px; }
   .hero { width: calc(100% - 20px); margin: 68px auto 12px; padding: 8px 0 20px; }
   .hero h1 { font-size: clamp(21px, 6.2vw, 30px); white-space: normal; }
   .map-section, .page-container { width: calc(100% - 20px); }
