@@ -38,37 +38,39 @@
       transition: color var(--fast) var(--ease);
     }
     .admin-back-link:hover { color: var(--accent); }
-    .admin-stats-grid {
-      margin-top: 22px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border-block: 1.5px solid var(--line-strong);
-    }
-    .admin-stat-box {
-      min-width: 0;
-      padding: 14px 14px 14px 0;
-      border-right: 1px solid var(--line);
+    .admin-access-controls {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
-    .admin-stat-box:last-child { border-right: 0; }
-    .admin-stat-box span {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+    .admin-login-dialog {
+      width: min(440px, calc(100% - 28px));
+      max-height: min(90vh, 680px);
+      padding: 22px;
+      border: 1.5px solid var(--line-strong);
+      background: var(--surface);
+      color: var(--text);
     }
-    .admin-stat-box strong {
+    .admin-login-dialog::backdrop {
+      background: rgb(0 0 0 / 55%);
+    }
+    .admin-login-dialog h2 {
+      margin: 0 0 8px;
       font-family: var(--font-title);
-      color: var(--accent);
-      font-size: 28px;
-      line-height: 1.1;
+      font-size: 21px;
     }
-    .admin-stat-box small {
+    .admin-login-dialog p {
+      margin: 0 0 16px;
       color: var(--text-soft);
-      font-size: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .admin-login-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 14px;
     }
     .admin-filters-grid {
       margin-top: 20px;
@@ -120,6 +122,35 @@
     .admin-table tr:last-child td {
       border-bottom: 0;
     }
+    .admin-actions-cell {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .btn-mod-approve,
+    .btn-mod-reject {
+      min-height: 32px;
+      padding: 0 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      font: 700 12px var(--font-body);
+      cursor: pointer;
+      transition: background-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+    }
+    .btn-mod-approve {
+      background: var(--st-1);
+      color: #fff;
+    }
+    .btn-mod-reject {
+      background: var(--surface);
+      color: var(--st-4);
+    }
+    .btn-mod-approve:hover:not(:disabled),
+    .btn-mod-reject:hover:not(:disabled) { background: var(--control-hover); color: var(--text); }
+    .btn-mod-approve:active:not(:disabled),
+    .btn-mod-reject:active:not(:disabled) { transform: scale(.97); }
+    .btn-mod-approve:disabled,
+    .btn-mod-reject:disabled { cursor: wait; opacity: .65; }
     .mod-pill {
       display: inline-flex;
       align-items: center;
@@ -129,35 +160,27 @@
       font-size: 11.5px;
       font-weight: 700;
     }
+    [hidden] { display: none !important; }
     .mod-pill.is-approved {
       color: var(--st-1);
     }
     .mod-pill.is-valid {
       color: var(--accent);
     }
+    .mod-pill.is-rejected {
+      color: var(--st-4);
+    }
     @media (max-width: 900px) {
-      .admin-stats-grid,
       .admin-filters-grid {
         grid-template-columns: repeat(2, 1fr);
       }
-      .admin-stat-box:nth-child(odd) { border-right: 1px solid var(--line); }
-      .admin-stat-box:nth-child(even) { border-right: 0; }
-      .admin-stat-box:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
     }
     @media (max-width: 560px) {
-      .admin-stats-grid,
       .admin-filters-grid {
         grid-template-columns: 1fr;
       }
-      .admin-stat-box,
-      .admin-stat-box:nth-child(odd),
-      .admin-stat-box:nth-child(even) {
-        padding-right: 0;
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-      }
-      .admin-stat-box:last-child { border-bottom: 0; }
       .admin-header { padding: 14px 72px 14px 16px; }
+      .admin-access-controls { justify-content: flex-start; }
     }
   </style>
 </head>
@@ -172,37 +195,16 @@
       <header class="report-hero">
         <div class="report-hero-main">
           <h1>Ringkasan Laporan Masyarakat</h1>
-          <p class="report-hero-desc">Halaman demo publik untuk melihat laporan yang memenuhi syarat tampil. Data pelapor tidak ditampilkan dan halaman ini tidak dapat mengubah status laporan.</p>
+          <p class="report-hero-desc">Laporan dapat dilihat publik tanpa identitas pelapor. Admin yang login dapat memverifikasi atau menolak laporan.</p>
         </div>
-        <div class="report-hero-action" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <div class="report-hero-action admin-access-controls">
           <span id="admin-moderator-label" class="badge-pill">Mode baca saja</span>
+          <button type="button" id="btn-admin-login-open" class="btn-outline-sm">Login Admin</button>
+          <button type="button" id="btn-admin-logout" class="btn-outline-sm" hidden>Keluar</button>
           <button type="button" id="btn-admin-refresh" class="btn-outline-sm">Muat Ulang</button>
         </div>
       </header>
       <p id="admin-last-updated" class="report-hero-desc" aria-live="polite">Belum diperbarui</p>
-
-      <div class="admin-stats-grid">
-        <div class="admin-stat-box">
-          <span>Laporan Ditampilkan</span>
-          <strong id="admin-stat-valid">0</strong>
-          <small>Laporan publik yang memenuhi syarat</small>
-        </div>
-        <div class="admin-stat-box">
-          <span>Belum Disetujui</span>
-          <strong id="admin-stat-pending">0</strong>
-          <small>Status valid, menunggu moderasi</small>
-        </div>
-        <div class="admin-stat-box">
-          <span>Disetujui Moderator</span>
-          <strong id="admin-stat-approved">0</strong>
-          <small>Sudah ditinjau moderator</small>
-        </div>
-        <div class="admin-stat-box">
-          <span>Kelompok Wilayah</span>
-          <strong id="admin-stat-promoted-groups">0</strong>
-          <small>Kelompok aktif dan data tambahan</small>
-        </div>
-      </div>
 
       <div id="admin-login-error" class="form-error-box" role="status" hidden></div>
       <div class="admin-filters-grid" aria-label="Filter laporan masyarakat">
@@ -232,6 +234,7 @@
             <option value="all">Semua Status</option>
             <option value="valid">Belum disetujui</option>
             <option value="approved">Disetujui Moderator</option>
+            <option value="rejected" hidden>Ditolak</option>
           </select>
         </div>
       </div>
@@ -246,6 +249,7 @@
               <th>Ringkasan Publik</th>
               <th>Kelompok</th>
               <th>Status Moderasi</th>
+              <th data-admin-only hidden>Aksi</th>
             </tr>
           </thead>
           <tbody id="admin-reports-tbody">
@@ -258,6 +262,26 @@
     </section>
   </main>
 
+  <dialog id="admin-login-dialog" class="admin-login-dialog" aria-labelledby="admin-login-title">
+    <h2 id="admin-login-title">Login Admin</h2>
+    <p>Gunakan kredensial admin yang disimpan sebagai Environment Variables di Vercel.</p>
+    <form id="admin-login-form" class="report-form" novalidate>
+      <div id="admin-login-dialog-error" class="form-error-box" role="alert" hidden></div>
+      <div class="form-field">
+        <label for="admin-email">Email Admin</label>
+        <input type="email" id="admin-email" class="form-input" required autocomplete="username">
+      </div>
+      <div class="form-field">
+        <label for="admin-password">Kata Sandi</label>
+        <input type="password" id="admin-password" class="form-input" required autocomplete="current-password">
+      </div>
+      <div class="admin-login-actions">
+        <button type="button" id="btn-admin-login-cancel" class="btn-outline-sm">Batal</button>
+        <button type="submit" id="btn-admin-login" class="btn-primary">Masuk</button>
+      </div>
+    </form>
+  </dialog>
+
   <footer>
     <span>Tim sEm4nGa7 k0Mp4k AnT1 mLeS - SMK Telkom Sidoarjo</span>
     <p>Panel Moderasi Laporan Masyarakat</p>
@@ -265,6 +289,6 @@
 
   <script src="../main/features/theme-toggle.js?v=23"></script>
   <script src="../site-config.js?v=1"></script>
-  <script src="/admin-panel/demo.js?v=4"></script>
+  <script src="/admin-panel/demo.js?v=5"></script>
 </body>
 </html>

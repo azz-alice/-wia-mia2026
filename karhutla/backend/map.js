@@ -77,11 +77,16 @@
     const summaryByPum = new Map();
     const summaryByBps = new Map();
     const communityByPum = new Map();
+    const provinceByRegencyPum = new Map(geojson.features.map(feature => [
+      String(feature?.properties?.regency_pum_code || "").trim(),
+      normalize(getName(feature))
+    ]));
     const layerByPum = new Map();
     const layerByBps = new Map();
     let lastGeneratedAt = initialSummary?.generated_at_utc || null;
     let lastCommunityUpdatedAt = initialCommunitySupp?.updated_at_utc || null;
     let pollInFlight = false;
+    let refreshStatsView = () => {};
 
     const indexCommunitySupplementary = payload => {
       communityByPum.clear();
@@ -89,6 +94,7 @@
       Object.entries(payload.regencies).forEach(([pum, entry]) => {
         if (pum && entry) communityByPum.set(String(pum).trim(), entry);
       });
+      refreshStatsView();
     };
 
     const communitySupplementaryFromGroups = groups => {
@@ -98,15 +104,15 @@
         if (!pum || group?.category !== "karhutla") return;
         const valid = Number(group.valid_report_count) || 0;
         const approved = Number(group.approved_report_count) || 0;
-        const eligible = group.eligible_report_count == null
-          ? (valid >= 5 ? valid : approved)
-          : Number(group.eligible_report_count) || 0;
+        const eligible = approved >= 5 ? approved : 0;
         if (!valid && !eligible) return;
 
         let entry = regencies[pum];
         if (!entry) {
           entry = {
             regency_pum_code: pum,
+            province_pum_code: group.province_pum_code,
+            province_name: group.province_name,
             karhutla: { valid_report_count: 0, eligible_report_count: 0 }
           };
           regencies[pum] = entry;
@@ -155,10 +161,6 @@
       let communityCount = 0;
       if (comm?.karhutla && Number.isFinite(Number(comm.karhutla.eligible_report_count))) {
         communityCount = Number(comm.karhutla.eligible_report_count);
-      } else if (comm?.karhutla && Number.isFinite(Number(comm.karhutla.valid_report_count))) {
-        communityCount = Number(comm.karhutla.valid_report_count);
-      } else if (rs && Number.isFinite(Number(rs.community_karhutla_count))) {
-        communityCount = Number(rs.community_karhutla_count);
       }
       const combinedCount = (officialCount != null || communityCount > 0)
         ? ((officialCount ?? 0) + communityCount)
@@ -287,7 +289,19 @@
       const chartProvinces = entries
         .map(([n, c]) => {
           const key = normalize(n);
-          return { key, name: title(n), shortName: ABBR[key] || title(n), hotspots: c, pm25: pm25ByProv.get(key) ?? 0 };
+          let communityCount = 0;
+          communityByPum.forEach((entry, pum) => {
+            const regencyProvince = provinceByRegencyPum.get(pum);
+            if (regencyProvince !== key) return;
+            communityCount += Number(entry?.karhutla?.eligible_report_count) || 0;
+          });
+          return {
+            key,
+            name: title(n),
+            shortName: ABBR[key] || title(n),
+            hotspots: c + communityCount,
+            pm25: pm25ByProv.get(key) ?? 0
+          };
         })
         .sort((a, b) => a.name.localeCompare(b.name, "id"));
 
@@ -295,12 +309,12 @@
       const statsTitleGroup = el("div", "stats-title-group");
       statsTitleGroup.append(
         el("h3", "stats-title", "Statistik Karhutla & Kesehatan Udara"),
-        el("p", "stats-desc", "Jumlah titik panas (kiri) dan rata-rata PM2.5 (kanan) berdasarkan provinsi")
+        el("p", "stats-desc", "Titik panas resmi + laporan komunitas terverifikasi (kiri) dan PM2.5 (kanan) per provinsi")
       );
 
       const statsLegend = el("div", "stats-legend");
       const legHot = el("span", "stats-legend-item is-hot");
-      legHot.append(el("i"), "Titik panas");
+      legHot.append(el("i"), "Titik panas gabungan");
       const legAir = el("span", "stats-legend-item is-air");
       legAir.append(el("i"), "Kesehatan udara (PM2.5)");
       statsLegend.append(legHot, legAir);
@@ -428,6 +442,12 @@
       });
       statsView.append(statsHeader, chartWrap);
     };
+    refreshStatsView = () => {
+      if (!statsBuilt) return;
+      statsBuilt = false;
+      statsView.replaceChildren();
+      buildStatsView();
+    };
 
     let activeMode = "hotspots", selected = null;
 
@@ -521,8 +541,11 @@
       }
 
       const cnt = el("p", "popup-count");
-      cnt.append(el("strong", null, fmt(ind.combinedCount ?? 0)), "titik panas");
-      box.append(cnt);
+      cnt.append(el("strong", null, fmt(ind.combinedCount ?? 0)), "indikator titik panas gabungan");
+      box.append(
+        cnt,
+        el("p", "popup-meta", `NASA/FIRMS 24 jam: ${ind.officialCount == null ? "tidak tersedia" : fmt(ind.officialCount)} · Laporan komunitas terverifikasi: ${fmt(ind.communityCount)}`)
+      );
       return box;
     };
 
