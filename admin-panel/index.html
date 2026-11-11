@@ -228,6 +228,7 @@
           <button type="button" id="btn-admin-refresh" class="btn-outline-sm">Muat Ulang</button>
         </div>
       </header>
+      <p id="admin-last-updated" class="report-hero-desc" aria-live="polite">Belum diperbarui</p>
 
       <div class="admin-stats-grid">
         <div class="admin-stat-box">
@@ -236,19 +237,19 @@
           <small>Laporan publik yang memenuhi syarat</small>
         </div>
         <div class="admin-stat-box">
+          <span>Belum Disetujui</span>
+          <strong id="admin-stat-pending">0</strong>
+          <small>Status valid, menunggu moderasi</small>
+        </div>
+        <div class="admin-stat-box">
           <span>Disetujui Moderator</span>
-          <strong id="admin-stat-rejected">0</strong>
-          <small>Bagian dari data yang ditampilkan</small>
+          <strong id="admin-stat-approved">0</strong>
+          <small>Sudah ditinjau moderator</small>
         </div>
         <div class="admin-stat-box">
-          <span>Kelompok Antrean</span>
-          <strong id="admin-stat-queue-groups">0</strong>
-          <small>Kelompok dengan 1–4 laporan</small>
-        </div>
-        <div class="admin-stat-box">
-          <span>Data Tambahan</span>
+          <span>Kelompok Wilayah</span>
           <strong id="admin-stat-promoted-groups">0</strong>
-          <small>Kelompok dengan minimal 5 laporan</small>
+          <small>Kelompok aktif dan data tambahan</small>
         </div>
       </div>
 
@@ -278,7 +279,7 @@
           <label for="admin-filter-status">Status Moderasi</label>
           <select id="admin-filter-status" class="form-select">
             <option value="all">Semua Status</option>
-            <option value="valid">Valid</option>
+            <option value="valid">Belum disetujui</option>
             <option value="approved">Disetujui Moderator</option>
           </select>
         </div>
@@ -313,6 +314,6 @@
 
   <script src="../main/features/theme-toggle.js?v=23"></script>
   <script src="../site-config.js?v=1"></script>
-  <script src="./demo.js?v=1"></script>
+  <script src="./demo.js?v=2"></script>
 </body>
 </html>

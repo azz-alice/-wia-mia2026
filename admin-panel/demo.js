@@ -4,6 +4,8 @@
   var reports = [];
   var groups = [];
   var regenciesByProvince = {};
+  var refreshTimer = null;
+  var refreshInFlight = false;
   var endpoint = window.ENV_SUPABASE_URL && window.ENV_SUPABASE_ANON_KEY
     ? window.ENV_SUPABASE_URL.replace(/\/+$/, '') + '/functions/v1/community-reports'
     : '';
@@ -63,14 +65,11 @@
 
   function renderStats() {
     var approved = reports.filter(function(report) { return report.moderation_status === 'approved'; }).length;
-    var queue = groups.filter(function(group) {
-      return group.valid_report_count > 0 && group.valid_report_count < 5;
-    }).length;
-    var promoted = groups.filter(function(group) { return group.valid_report_count >= 5; }).length;
+    var pending = reports.length - approved;
     document.getElementById('admin-stat-valid').textContent = String(reports.length);
-    document.getElementById('admin-stat-rejected').textContent = String(approved);
-    document.getElementById('admin-stat-queue-groups').textContent = String(queue);
-    document.getElementById('admin-stat-promoted-groups').textContent = String(promoted);
+    document.getElementById('admin-stat-pending').textContent = String(pending);
+    document.getElementById('admin-stat-approved').textContent = String(approved);
+    document.getElementById('admin-stat-promoted-groups').textContent = String(groups.length);
   }
 
   function getGroup(report) {
@@ -100,7 +99,7 @@
       var count = Number(report.group_valid_count || (group && group.valid_report_count) || 0);
       var queueLabel = count >= 5 ? 'Data tambahan · ' + count : 'Antrean · ' + count;
       var categoryLabel = report.category === 'karhutla' ? 'Karhutla' : 'Kualitas Udara';
-      var statusLabel = report.moderation_status === 'approved' ? 'Disetujui' : 'Valid';
+      var statusLabel = report.moderation_status === 'approved' ? 'Disetujui' : 'Belum disetujui';
       var statusClass = report.moderation_status === 'approved' ? 'is-approved' : 'is-valid';
       return '<tr>' +
         '<td><div class="row-code">' + escapeHtml(report.report_code) + '</div>' +
@@ -116,12 +115,18 @@
   }
 
   function loadReports() {
+    if (refreshInFlight || document.hidden) return;
     if (!endpoint) {
       showMessage('Konfigurasi Supabase belum tersedia untuk memuat laporan.', true);
       return;
     }
-    showMessage('Memuat laporan publik...', false);
-    fetch(endpoint + '?mode=public&limit=100', {
+    refreshInFlight = true;
+    var refreshButton = document.getElementById('btn-admin-refresh');
+    if (refreshButton) {
+      refreshButton.disabled = true;
+      refreshButton.textContent = 'Memuat...';
+    }
+    fetch(endpoint + '?mode=public&limit=100&t=' + Date.now(), {
       headers: { apikey: window.ENV_SUPABASE_ANON_KEY },
       cache: 'no-store'
     })
@@ -136,14 +141,27 @@
       .then(function(payload) {
         reports = Array.isArray(payload.reports) ? payload.reports : [];
         groups = Array.isArray(payload.groups) ? payload.groups : [];
-        showMessage(reports.length ? '' : 'Belum ada laporan publik yang memenuhi syarat untuk ditampilkan.', false);
+        showMessage(reports.length ? '' : 'Belum ada laporan valid atau disetujui untuk ditampilkan. Laporan yang ditolak tidak ditampilkan di demo publik.', false);
+        document.getElementById('admin-last-updated').textContent =
+          'Terakhir diperbarui: ' + new Date().toLocaleTimeString('id-ID', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: 'Asia/Jakarta'
+          }) +
+          ' WIB · Pembaruan otomatis setiap 30 detik';
         renderStats();
         renderReports();
       })
       .catch(function(error) {
-        showMessage(error.message || 'Tidak dapat terhubung ke layanan laporan.', true);
-        document.getElementById('admin-reports-tbody').innerHTML =
-          '<tr><td colspan="6">Laporan gagal dimuat. Coba muat ulang halaman.</td></tr>';
+        showMessage('Gagal memperbarui data: ' + (error.message || 'Tidak dapat terhubung ke layanan laporan.'), true);
+      })
+      .finally(function() {
+        refreshInFlight = false;
+        if (refreshButton) {
+          refreshButton.disabled = false;
+          refreshButton.textContent = 'Muat Ulang';
+        }
       });
   }
 
@@ -162,6 +180,8 @@
       });
     document.getElementById('btn-admin-refresh').addEventListener('click', loadReports);
     loadReports();
+    if (refreshTimer) window.clearInterval(refreshTimer);
+    refreshTimer = window.setInterval(loadReports, 30000);
   }
 
   if (document.readyState === 'loading') {

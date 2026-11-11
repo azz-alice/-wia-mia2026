@@ -56,7 +56,7 @@ Folder proyek harus diunggah bersama struktur foldernya. Halaman yang tersedia:
 - `/gunung-berapi/` — peta dan informasi gunung berapi.
 - `/karhutla/` — peta karhutla dan kualitas udara.
 - `/laporan/` — formulir dan daftar laporan masyarakat.
-- `/admin-panel/` — demo publik baca-saja untuk laporan yang memenuhi syarat; tidak menampilkan identitas pelapor dan tidak dapat menyetujui/menolak laporan.
+- `/admin-panel/` — demo publik baca-saja untuk laporan yang memenuhi syarat, otomatis diperbarui setiap 30 detik; status valid/belum disetujui dan disetujui ditampilkan tanpa identitas pelapor. Laporan ditolak tidak disertakan endpoint publik dan demo tidak dapat mengubah status.
 
 Nama folder dan berkas menggunakan huruf kecil serta tanda hubung. Jangan mengganti nama folder tanpa memperbarui tautan relatif di halaman. Hosting harus menyajikan `index.html` dalam folder; jika URL hosting memakai subfolder, unggah seluruh isi repositori sebagai satu kesatuan.
 
