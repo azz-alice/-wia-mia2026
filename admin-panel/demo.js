@@ -114,8 +114,8 @@
     }).join('');
   }
 
-  function loadReports() {
-    if (refreshInFlight || document.hidden) return;
+  function loadReports(force) {
+    if (refreshInFlight || (document.hidden && !force)) return;
     if (!endpoint) {
       showMessage('Konfigurasi Supabase belum tersedia untuk memuat laporan.', true);
       return;
@@ -179,7 +179,10 @@
         });
       });
     document.getElementById('btn-admin-refresh').addEventListener('click', loadReports);
-    loadReports();
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) loadReports();
+    });
+    loadReports(true);
     if (refreshTimer) window.clearInterval(refreshTimer);
     refreshTimer = window.setInterval(loadReports, 30000);
   }
