@@ -212,76 +212,48 @@
 </head>
 <body>
   <header class="admin-header">
-    <strong>Admin &amp; Moderator Portal</strong>
+    <strong>Data Laporan Masyarakat</strong>
     <a class="admin-back-link" href="../main/">&larr; Kembali ke Website</a>
   </header>
 
   <main class="report-page">
-    <section id="admin-login-section">
-      <div class="admin-auth-card">
-        <h1>Panel Moderasi Laporan</h1>
-        <p>Masuk menggunakan kredensial admin untuk meninjau, menyetujui, atau menolak laporan masyarakat.</p>
-        <form id="admin-login-form" class="report-form" novalidate>
-          <div id="admin-login-error" class="form-error-box" role="alert" hidden></div>
-          <div class="form-field">
-            <label for="admin-email">Email Admin <span class="req">*</span></label>
-            <input type="email" id="admin-email" class="form-input" required autocomplete="username" placeholder="admin@example.com">
-          </div>
-          <div class="form-field">
-            <label for="admin-password">Kata Sandi Admin <span class="req">*</span></label>
-            <input type="password" id="admin-password" class="form-input" required autocomplete="current-password" placeholder="Masukkan kata sandi admin">
-          </div>
-          <div class="modal-actions">
-            <button type="submit" id="btn-admin-login" class="btn-primary" style="width: 100%;">Masuk ke Panel Moderasi</button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <section id="admin-dashboard-section" hidden>
-      <div id="admin-action-feedback" class="community-alert-banner" role="status" hidden>
-        <div class="community-alert-text">
-          <strong>Status Moderasi Diperbarui</strong>
-          <span id="admin-action-feedback-text"></span>
-        </div>
-      </div>
-
+    <section id="admin-dashboard-section">
       <header class="report-hero">
         <div class="report-hero-main">
-          <h1>Kelola &amp; Verifikasi Laporan</h1>
-          <p class="report-hero-desc">Tinjau laporan individu pada kelompok antrean (1–4 laporan) maupun kelompok data tambahan masyarakat (5+ laporan). Menolak laporan akan mengeluarkannya dari perhitungan kelompok wilayah.</p>
+          <h1>Ringkasan Laporan Masyarakat</h1>
+          <p class="report-hero-desc">Halaman demo publik untuk melihat laporan yang memenuhi syarat tampil. Data pelapor tidak ditampilkan dan halaman ini tidak dapat mengubah status laporan.</p>
         </div>
         <div class="report-hero-action" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-          <span id="admin-moderator-label" class="badge-pill">Moderator Aktif</span>
+          <span id="admin-moderator-label" class="badge-pill">Mode baca saja</span>
           <button type="button" id="btn-admin-refresh" class="btn-outline-sm">Muat Ulang</button>
-          <button type="button" id="btn-admin-logout" class="btn-outline-sm">Keluar</button>
         </div>
       </header>
 
       <div class="admin-stats-grid">
         <div class="admin-stat-box">
-          <span>Laporan Valid / Disetujui</span>
+          <span>Laporan Ditampilkan</span>
           <strong id="admin-stat-valid">0</strong>
-          <small>Dihitung dalam kelompok wilayah</small>
+          <small>Laporan publik yang memenuhi syarat</small>
         </div>
         <div class="admin-stat-box">
-          <span>Laporan Ditolak</span>
+          <span>Disetujui Moderator</span>
           <strong id="admin-stat-rejected">0</strong>
-          <small>Dikeluarkan dari perhitungan wilayah</small>
+          <small>Bagian dari data yang ditampilkan</small>
         </div>
         <div class="admin-stat-box">
-          <span>Kelompok Antrean (1–4)</span>
+          <span>Kelompok Antrean</span>
           <strong id="admin-stat-queue-groups">0</strong>
-          <small>Kelompok wilayah dalam antrean aktif</small>
+          <small>Kelompok dengan 1–4 laporan</small>
         </div>
         <div class="admin-stat-box">
-          <span>Kelompok Data Tambahan (5+)</span>
+          <span>Data Tambahan</span>
           <strong id="admin-stat-promoted-groups">0</strong>
-          <small>Memenuhi kuota minimum 5 laporan</small>
+          <small>Kelompok dengan minimal 5 laporan</small>
         </div>
       </div>
 
-      <div class="admin-filters-grid" aria-label="Filter moderasi laporan">
+      <div id="admin-login-error" class="form-error-box" role="status" hidden></div>
+      <div class="admin-filters-grid" aria-label="Filter laporan masyarakat">
         <div class="admin-filter-item">
           <label for="admin-filter-category">Kategori</label>
           <select id="admin-filter-category" class="form-select">
@@ -306,9 +278,8 @@
           <label for="admin-filter-status">Status Moderasi</label>
           <select id="admin-filter-status" class="form-select">
             <option value="all">Semua Status</option>
-            <option value="valid">Valid (Belum Ditinjau)</option>
+            <option value="valid">Valid</option>
             <option value="approved">Disetujui Moderator</option>
-            <option value="rejected">Ditolak Moderator</option>
           </select>
         </div>
       </div>
@@ -317,18 +288,17 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>Kode &amp; Waktu Kirim</th>
-              <th>Wilayah &amp; Pelapor (Internal)</th>
+              <th>Kode &amp; Waktu</th>
+              <th>Wilayah</th>
               <th>Jenis</th>
-              <th>Rincian Pengamatan &amp; Bukti</th>
-              <th>Status Kelompok Wilayah</th>
+              <th>Ringkasan Publik</th>
+              <th>Kelompok</th>
               <th>Status Moderasi</th>
-              <th>Tindakan Moderator</th>
             </tr>
           </thead>
           <tbody id="admin-reports-tbody">
             <tr>
-              <td colspan="7">Memuat daftar laporan untuk moderasi...</td>
+              <td colspan="6">Memuat laporan publik...</td>
             </tr>
           </tbody>
         </table>
@@ -342,6 +312,7 @@
   </footer>
 
   <script src="../main/features/theme-toggle.js?v=23"></script>
-  <script src="./admin.js?v=26"></script>
+  <script src="../site-config.js?v=1"></script>
+  <script src="./demo.js?v=1"></script>
 </body>
 </html>
