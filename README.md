@@ -94,14 +94,7 @@ Untuk situs online, gunakan alamat bawaan hosting (domain kustom opsional), dan 
 
    `community-reports` menerima pengiriman publik. Moderasi dilakukan melalui API server-side Vercel dengan sesi admin HTTP-only.
 
-4. Halaman `/admin-panel/` menampilkan data publik tanpa login. Untuk memverifikasi atau menolak laporan, login admin memerlukan variabel Production berikut di **Settings → Environment Variables**:
-   - `ADMIN_EMAIL`: email login admin.
-   - `ADMIN_PASSWORD`: kata sandi admin yang kuat (disarankan minimal 14 karakter).
-   - `ADMIN_SESSION_SECRET`: nilai acak rahasia minimal 32 byte untuk menandatangani sesi.
-   - `SUPABASE_URL`: Project URL Supabase, misalnya `https://PROJECT_REF.supabase.co`.
-   - `SUPABASE_SERVICE_ROLE_KEY`: service-role/secret key Supabase.
-
-   Buat nilai `ADMIN_SESSION_SECRET` secara lokal dengan `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`. Masukkan semua nilai langsung ke Vercel, bukan ke `.env` yang di-commit. Nilai-nilai tersebut hanya digunakan API server Vercel; jangan masukkan kredensial admin atau service-role key ke `site-config.js`, HTML, JavaScript browser, atau Git. Setelah menyimpan Environment Variables, lakukan redeploy Production.
+4. Halaman `/admin-panel/` menampilkan data publik tanpa login. Untuk demo, API server menggunakan akun tetap `admin@gmail.com` dengan kata sandi `SemangatKompak2026!`; Environment Variables admin tidak diperlukan. Kredensial demo ini tersimpan di kode server dan dapat dilihat siapa pun yang memiliki akses ke repository, jadi jangan gunakan untuk data privat atau layanan produksi. Daftar dan moderasi laporan tetap memerlukan `SUPABASE_URL` serta `SUPABASE_SERVICE_ROLE_KEY` sebagai Environment Variables server Vercel. Jangan masukkan service-role key ke `site-config.js`, HTML, JavaScript browser, atau Git.
 
 5. Untuk pembaruan data langsung, masukkan `NASA_FIRMS_MAP_KEY` dan `OPENAQ_API_KEY` sebagai **Edge Function secrets** di Supabase, lalu jadwalkan pemanggilan `sync-nasa-firms` dan `sync-openaq-pm25` (interval yang digunakan aplikasi adalah 60 menit). Kedua key ini tidak diperlukan agar halaman statis dan data peta bawaan dapat ditampilkan, tetapi diperlukan untuk pembaruan data terbaru dari sumbernya.
 
@@ -110,7 +103,6 @@ Untuk situs online, gunakan alamat bawaan hosting (domain kustom opsional), dan 
 ### Konfigurasi yang Tidak Boleh Dipublikasikan
 
 - `SUPABASE_SERVICE_ROLE_KEY`: simpan sebagai secret server/Edge Function saja; tidak boleh berada di `site-config.js`, HTML, atau JavaScript browser.
-- `ADMIN_PASSWORD` dan `ADMIN_SESSION_SECRET`: isi sebagai Environment Variables server Vercel saja.
 - `NASA_FIRMS_MAP_KEY` dan `OPENAQ_API_KEY`: simpan sebagai Edge Function secrets (atau di `.env` untuk `sync_realtime.py` lokal).
 - Jangan unggah `.env`. Berkas itu diabaikan Git.
 
