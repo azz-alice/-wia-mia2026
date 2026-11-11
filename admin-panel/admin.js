@@ -179,8 +179,15 @@
         renderAdminStats();
         renderAdminTable();
       })
-      .catch(function() {
+      .catch(function(err) {
         showLoginView();
+        var loginError = document.getElementById('admin-login-error');
+        if (loginError) {
+          loginError.textContent = err && err.message
+            ? 'Tidak dapat memuat panel moderasi: ' + err.message
+            : 'Tidak dapat terhubung ke Supabase. Periksa koneksi lalu coba lagi.';
+          loginError.hidden = false;
+        }
       });
   }
 
