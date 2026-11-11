@@ -142,7 +142,7 @@
       return {
         type: "supabase",
         url: `${sbUrl.replace(/\/$/, "")}/functions/v1/community-reports`,
-        headers: { "Content-Type": "application/json", apikey: sbAnon, Authorization: `Bearer ${sbAnon}` }
+        headers: { "Content-Type": "application/json", apikey: sbAnon }
       };
     }
     return null;

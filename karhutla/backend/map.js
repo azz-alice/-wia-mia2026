@@ -644,7 +644,7 @@
 
       const communityRequest = sbUrl && sbAnonKey
         ? fetch(`${sbUrl.replace(/\/$/, "")}/functions/v1/community-reports?mode=public&limit=5`, {
-            headers: { apikey: sbAnonKey, Authorization: `Bearer ${sbAnonKey}` },
+            headers: { apikey: sbAnonKey },
             cache: "no-store"
           })
             .then(r => (r.ok ? r.json() : null))
@@ -678,7 +678,7 @@
 
       const remoteSummaryRequest = sbUrl && sbAnonKey
         ? fetch(`${sbUrl.replace(/\/$/, "")}/rest/v1/city_environment_summary?select=*`, {
-            headers: { apikey: sbAnonKey, Authorization: `Bearer ${sbAnonKey}` },
+            headers: { apikey: sbAnonKey },
             cache: "no-store"
           })
             .then(r => (r.ok ? r.json() : null))
