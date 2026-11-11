@@ -17,14 +17,6 @@
   <link rel="stylesheet" href="../main/style/theme.css?v=23">
   <link rel="stylesheet" href="../laporan/style/style.css?v=23">
   <style>
-    .admin-auth-card {
-      max-width: 460px;
-      margin: 44px auto;
-      padding: 26px 24px;
-      border: 1.5px solid var(--line-strong);
-      border-radius: 12px;
-      background: var(--control-bg);
-    }
     .admin-header {
       padding: 14px max(72px, calc((100% - var(--container)) / 2)) 14px max(18px, calc((100% - var(--container)) / 2));
       border-bottom: 1.5px solid var(--line-strong);
@@ -46,15 +38,6 @@
       transition: color var(--fast) var(--ease);
     }
     .admin-back-link:hover { color: var(--accent); }
-    .admin-auth-card h1 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-    .admin-auth-card p {
-      color: var(--text-soft);
-      font-size: 14px;
-      margin-bottom: 18px;
-    }
     .admin-stats-grid {
       margin-top: 22px;
       display: grid;
@@ -137,35 +120,6 @@
     .admin-table tr:last-child td {
       border-bottom: 0;
     }
-    .admin-actions-cell {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .btn-mod-approve,
-    .btn-mod-reject {
-      min-height: 32px;
-      padding: 0 12px;
-      border: 1.5px solid var(--line-strong);
-      border-radius: 999px;
-      font-family: var(--font-body);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: filter var(--fast) var(--ease), transform var(--fast) var(--ease);
-    }
-    .btn-mod-approve:hover:not(:disabled),
-    .btn-mod-reject:hover:not(:disabled) { filter: brightness(1.08); }
-    .btn-mod-approve:active:not(:disabled),
-    .btn-mod-reject:active:not(:disabled) { transform: scale(.97); }
-    .btn-mod-approve {
-      background: var(--st-1);
-      color: #ffffff;
-    }
-    .btn-mod-reject {
-      background: var(--st-4);
-      color: #ffffff;
-    }
     .mod-pill {
       display: inline-flex;
       align-items: center;
@@ -177,9 +131,6 @@
     }
     .mod-pill.is-approved {
       color: var(--st-1);
-    }
-    .mod-pill.is-rejected {
-      color: var(--st-4);
     }
     .mod-pill.is-valid {
       color: var(--accent);

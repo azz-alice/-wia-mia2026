@@ -92,7 +92,7 @@ Untuk situs online, gunakan alamat bawaan hosting (domain kustom opsional), dan 
    supabase functions deploy sync-openaq-pm25
    ```
 
-   `community-reports` menerima pengiriman publik. Panel moderator memakai API server-side Vercel dan tidak menggunakan akun Supabase Auth.
+   `community-reports` menerima pengiriman publik. API moderasi server-side Vercel tersedia untuk integrasi admin terautentikasi; halaman `/admin-panel/` saat ini adalah demo baca-saja dan tidak memanggil API moderasi tersebut.
 
 4. Halaman `/admin-panel/` adalah demo baca-saja dan tidak memerlukan login atau Environment Variables admin. API server untuk moderasi tetap terlindungi dan, jika dipakai, perlu variabel Production berikut di **Settings → Environment Variables**:
    - `ADMIN_EMAIL`: email login admin.
