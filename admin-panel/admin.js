@@ -2,14 +2,11 @@
   'use strict';
 
   var WILAYAH_JSON_URL = '../laporan/data/wilayah-indonesia.json';
-  var SESSION_TOKEN_KEY = 'moderator_session_token';
-  var SESSION_EMAIL_KEY = 'moderator_session_email';
 
   var state = {
     provinces: [],
     regenciesByProv: {},
-    token: sessionStorage.getItem(SESSION_TOKEN_KEY) || '',
-    moderatorEmail: sessionStorage.getItem(SESSION_EMAIL_KEY) || '',
+    moderatorEmail: '',
     reports: [],
     groups: [],
     filters: {
@@ -21,21 +18,11 @@
   };
 
   function getApiEndpoint() {
-    if (window.ENV_SUPABASE_URL && window.ENV_SUPABASE_ANON_KEY) {
-      return window.ENV_SUPABASE_URL.replace(/\/+$/, '') + '/functions/v1/community-reports';
-    }
-    return null;
+    return '/api/admin/reports';
   }
 
   function buildAuthHeaders() {
-    var headers = { 'Content-Type': 'application/json' };
-    if (state.token) {
-      headers['Authorization'] = 'Bearer ' + state.token;
-    }
-    if (window.ENV_SUPABASE_ANON_KEY) {
-      headers['apikey'] = window.ENV_SUPABASE_ANON_KEY;
-    }
-    return headers;
+    return { 'Content-Type': 'application/json' };
   }
 
   function escapeHtml(str) {
@@ -127,19 +114,7 @@
   }
 
   function loadAdminReports() {
-    var endpoint = getApiEndpoint();
-    if (!endpoint) {
-      showLoginView();
-      var configError = document.getElementById('admin-login-error');
-      if (configError) {
-        configError.textContent = 'Supabase belum dikonfigurasi. Isi Project URL dan anon/public key di site-config.js.';
-        configError.hidden = false;
-      }
-      return;
-    }
-    var isSupabase = Boolean(window.ENV_SUPABASE_URL && window.ENV_SUPABASE_ANON_KEY);
-    var url = endpoint + (isSupabase ? '?mode=admin&limit=100' : '?action=admin_list');
-    return fetch(url, {
+    return fetch(getApiEndpoint(), {
       method: 'GET',
       headers: buildAuthHeaders(),
       cache: 'no-store'
@@ -151,9 +126,7 @@
       })
       .then(function(result) {
         if (!result.ok) {
-          if (result.status === 401 || result.status === 403) {
-            handleLogout();
-          }
+          if (result.status === 401) showLoginView();
           var loginError = document.getElementById('admin-login-error');
           if (loginError) {
             loginError.textContent = result.body && result.body.message
@@ -347,11 +320,10 @@
     if (!reportId || !newStatus) return;
     if (btnEl) btnEl.disabled = true;
 
-    fetch(getApiEndpoint(), {
+    fetch('/api/admin/moderate', {
       method: 'POST',
       headers: buildAuthHeaders(),
       body: JSON.stringify({
-        action: 'moderate',
         report_id: reportId,
         moderation_status: newStatus
       })
@@ -426,41 +398,27 @@
       }
       return;
     }
-    if (!getApiEndpoint()) {
-      if (errEl) {
-        errEl.textContent = 'Supabase belum dikonfigurasi. Isi Project URL dan anon/public key di site-config.js.';
-        errEl.hidden = false;
-      }
-      return;
-    }
-
     if (btnLogin) {
       btnLogin.disabled = true;
       btnLogin.textContent = 'Memverifikasi...';
     }
 
-    var loginPromise = fetch(window.ENV_SUPABASE_URL.replace(/\/+$/, '') + '/auth/v1/token?grant_type=password', {
+    var loginPromise = fetch('/api/admin/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': window.ENV_SUPABASE_ANON_KEY
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email, password: password })
     }).then(function(res) {
       return res.json().then(function(data) {
-        if (!res.ok || !data.access_token) {
-          throw new Error(data.error_description || data.msg || 'Kredensial moderator tidak valid.');
+        if (!res.ok || !data.ok) {
+          throw new Error(data.message || 'Email atau kata sandi admin tidak valid.');
         }
-        return { token: data.access_token, email: email };
+        return { email: data.email || email };
       });
     });
 
     loginPromise
       .then(function(session) {
-        state.token = session.token;
         state.moderatorEmail = session.email;
-        sessionStorage.setItem(SESSION_TOKEN_KEY, state.token);
-        sessionStorage.setItem(SESSION_EMAIL_KEY, state.moderatorEmail);
         if (passwordInput) passwordInput.value = '';
         return loadAdminReports();
       })
@@ -479,11 +437,10 @@
   }
 
   function handleLogout() {
-    state.token = '';
     state.moderatorEmail = '';
-    sessionStorage.removeItem(SESSION_TOKEN_KEY);
-    sessionStorage.removeItem(SESSION_EMAIL_KEY);
-    showLoginView();
+    fetch('/api/admin/logout', { method: 'POST', headers: buildAuthHeaders() })
+      .catch(function() {})
+      .finally(showLoginView);
   }
 
   function bindEvents() {
@@ -551,11 +508,15 @@
   function init() {
     bindEvents();
     loadWilayah().then(function() {
-      if (state.token) {
-        loadAdminReports();
-      } else {
-        showLoginView();
-      }
+      fetch('/api/admin/session', { cache: 'no-store' })
+        .then(function(res) { return res.json().then(function(body) { return { ok: res.ok, body: body }; }); })
+        .then(function(result) {
+          if (result.ok && result.body.ok) {
+            state.moderatorEmail = result.body.email;
+            loadAdminReports();
+          } else showLoginView();
+        })
+        .catch(function() { showLoginView(); });
     });
   }
 

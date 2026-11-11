@@ -220,16 +220,16 @@
     <section id="admin-login-section">
       <div class="admin-auth-card">
         <h1>Panel Moderasi Laporan</h1>
-        <p>Masuk menggunakan akun moderator terotorisasi untuk meninjau, menyetujui, atau menolak laporan masyarakat.</p>
+        <p>Masuk menggunakan kredensial admin untuk meninjau, menyetujui, atau menolak laporan masyarakat.</p>
         <form id="admin-login-form" class="report-form" novalidate>
           <div id="admin-login-error" class="form-error-box" role="alert" hidden></div>
           <div class="form-field">
-            <label for="admin-email">Email Moderator <span class="req">*</span></label>
-            <input type="email" id="admin-email" class="form-input" required autocomplete="username" placeholder="moderator@wiamia2026.id">
+            <label for="admin-email">Email Admin <span class="req">*</span></label>
+            <input type="email" id="admin-email" class="form-input" required autocomplete="username" placeholder="admin@example.com">
           </div>
           <div class="form-field">
-            <label for="admin-password">Kata Sandi <span class="req">*</span></label>
-            <input type="password" id="admin-password" class="form-input" required autocomplete="current-password" placeholder="Masukkan kata sandi moderator">
+            <label for="admin-password">Kata Sandi Admin <span class="req">*</span></label>
+            <input type="password" id="admin-password" class="form-input" required autocomplete="current-password" placeholder="Masukkan kata sandi admin">
           </div>
           <div class="modal-actions">
             <button type="submit" id="btn-admin-login" class="btn-primary" style="width: 100%;">Masuk ke Panel Moderasi</button>
@@ -342,7 +342,6 @@
   </footer>
 
   <script src="../main/features/theme-toggle.js?v=23"></script>
-  <script src="../site-config.js?v=1"></script>
-  <script src="./admin.js?v=25"></script>
+  <script src="./admin.js?v=26"></script>
 </body>
 </html>

@@ -78,10 +78,10 @@ Untuk situs online, gunakan alamat bawaan hosting (domain kustom opsional), dan 
    ```text
    supabase login
    supabase link --project-ref PROJECT_REF
-   supabase db push
+   supabase db push --remote
    ```
 
-   Migrasi menyiapkan tabel, kebijakan akses, dan fungsi laporan. Terapkan migrasi `20261110000000`, `20261110010000`, `20261111000000`, dan `20261112000000` secara berurutan; migrasi terakhir menghapus alur serta kolom tanggal dampak Karhutla.
+   Migrasi menyiapkan tabel, kebijakan akses, dan fungsi laporan/moderasi. Terapkan semua migrasi secara berurutan; migrasi terbaru juga menyiapkan fungsi moderasi untuk API server Vercel.
 
 3. Deploy Edge Functions yang dipakai aplikasi:
 
@@ -92,21 +92,29 @@ Untuk situs online, gunakan alamat bawaan hosting (domain kustom opsional), dan 
    supabase functions deploy sync-openaq-pm25
    ```
 
-   `community-reports` harus mengizinkan request publik sesuai `supabase/config.toml`; hak moderasi tetap diperiksa lewat akun Supabase Auth dan `moderator_profiles`.
+   `community-reports` menerima pengiriman publik. Panel moderator memakai API server-side Vercel dan tidak menggunakan akun Supabase Auth.
 
-4. Buat akun moderator di Supabase Auth, lalu tambahkan profil moderator aktif yang menunjuk ke UUID akun tersebut. Jangan membuat akun moderator dengan membagikan service key atau menyimpan kata sandi di frontend.
+4. Di pengaturan proyek Vercel, buka **Settings → Environment Variables** dan tambahkan untuk Production (serta Preview jika dipakai):
+   - `ADMIN_EMAIL`: email login admin.
+   - `ADMIN_PASSWORD`: kata sandi admin yang kuat (disarankan minimal 14 karakter).
+   - `ADMIN_SESSION_SECRET`: nilai acak rahasia minimal 32 byte untuk menandatangani sesi.
+   - `SUPABASE_URL`: Project URL Supabase, misalnya `https://PROJECT_REF.supabase.co`.
+   - `SUPABASE_SERVICE_ROLE_KEY`: service-role/secret key Supabase.
+
+   Buat nilai `ADMIN_SESSION_SECRET` secara lokal dengan `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`. Masukkan semua nilai langsung ke Vercel, bukan ke `.env` yang di-commit. Nilai-nilai tersebut hanya digunakan API server Vercel; jangan masukkan kredensial admin atau service-role key ke `site-config.js`, HTML, JavaScript browser, atau Git. Setelah menyimpan Environment Variables, lakukan redeploy Production. Login panel `/admin-panel/` menggunakan `ADMIN_EMAIL` dan `ADMIN_PASSWORD`. Moderasi memakai cookie HTTP-only dan mencatat email admin di database.
 
 5. Untuk pembaruan data langsung, masukkan `NASA_FIRMS_MAP_KEY` dan `OPENAQ_API_KEY` sebagai **Edge Function secrets** di Supabase, lalu jadwalkan pemanggilan `sync-nasa-firms` dan `sync-openaq-pm25` (interval yang digunakan aplikasi adalah 60 menit). Kedua key ini tidak diperlukan agar halaman statis dan data peta bawaan dapat ditampilkan, tetapi diperlukan untuk pembaruan data terbaru dari sumbernya.
 
-6. Deploy seluruh isi folder proyek ke hosting statis dengan HTTPS. Uji URL kelima halaman di atas. Pastikan `site-config.js` ikut terunggah dan hanya berisi Project URL serta anon/public key.
+6. Deploy seluruh isi folder proyek ke Vercel dengan root repository sebagai **Root Directory**, agar folder `api/` dikenali sebagai Vercel Functions. Uji URL halaman dan endpoint panel moderator menggunakan HTTPS. Pastikan `site-config.js` hanya berisi Project URL serta anon/public key.
 
 ### Konfigurasi yang Tidak Boleh Dipublikasikan
 
 - `SUPABASE_SERVICE_ROLE_KEY`: simpan sebagai secret server/Edge Function saja; tidak boleh berada di `site-config.js`, HTML, atau JavaScript browser.
+- `ADMIN_PASSWORD` dan `ADMIN_SESSION_SECRET`: isi sebagai Environment Variables server Vercel saja.
 - `NASA_FIRMS_MAP_KEY` dan `OPENAQ_API_KEY`: simpan sebagai Edge Function secrets (atau di `.env` untuk `sync_realtime.py` lokal).
 - Jangan unggah `.env`. Berkas itu diabaikan Git.
 
-Jika Supabase belum dikonfigurasi, halaman peta masih dapat menampilkan data JSON bawaan dan snapshot laporan masyarakat lokal. Setelah konfigurasi diisi, indikator laporan masyarakat pada peta dan data lingkungan terbaru dimuat dari Supabase; kirim laporan, login/moderasi online, dan pembaruan data dari Supabase memerlukan migrasi serta Edge Functions yang sudah aktif. Fitur laporan memakai database Supabase persisten; backend SQLite hanya lokal. Formulir Karhutla tidak menggunakan unggah foto atau tanggal mulai dampak.
+Jika Supabase belum dikonfigurasi, halaman peta masih dapat menampilkan data JSON bawaan dan snapshot laporan masyarakat lokal. Setelah konfigurasi diisi, indikator laporan masyarakat pada peta dan data lingkungan terbaru dimuat dari Supabase; kirim laporan dan pembaruan data memerlukan migrasi serta Edge Functions yang sudah aktif. Login/moderasi online memerlukan Vercel Functions, Environment Variables server, dan migrasi database. Fitur laporan memakai database Supabase persisten; backend SQLite hanya lokal. Formulir Karhutla tidak menggunakan unggah foto atau tanggal mulai dampak.
 
 Penutup :
 Kami berharap website ini bisa membantu pengunjung memahami informasi mengenai lingkungan dan bencana di Indonesia dengan lebih mudah. Semoga informasi yang disajikan juga bisa menambah pengetahuan dan kepedulian kita terhadap lingkungan sekitar.
