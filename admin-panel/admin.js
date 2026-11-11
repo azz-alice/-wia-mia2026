@@ -154,6 +154,13 @@
           if (result.status === 401 || result.status === 403) {
             handleLogout();
           }
+          var loginError = document.getElementById('admin-login-error');
+          if (loginError) {
+            loginError.textContent = result.body && result.body.message
+              ? result.body.message
+              : 'Gagal memuat panel moderasi. Periksa akun moderator dan koneksi Supabase.';
+            loginError.hidden = false;
+          }
           return;
         }
         state.reports = Array.isArray(result.body.reports) ? result.body.reports : [];
